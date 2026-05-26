@@ -5,13 +5,14 @@
 
 import 'package:flutter/material.dart';
 
-const Color primaryColor = Color(0xFF00FF66);
-// const Color primaryColor =  Color.fromARGB(255, 255, 145, 0);
-// const Color primaryColor = Color.fromRGBO(255, 0, 25, 1);
+const Color white = Color(0xFFE6F1FF);
+// const Color primaryColor =  Color(0xFFFF9100);
+const Color primaryColor =  Color.fromARGB(255, 40, 251, 164);
+// const Color primaryColor = Color.fromARGB(255, 0, 255, 85);
 const Color apocaliptic = Color(0xFFFFBF00);
 const Color zomb = Color(0xFFFF0022);
-const Color cyberpunk = Color(0xFF00FFFF);
-const Color glitch = Color(0xFFFF00FF);
+const Color cyberpunk = Color(0xFF00F0FF);
+const Color glitch = Color(0xFFFF007C);
 const Color matrixGreen = Color(0xFF00FF00);
 const Color terminalBackgroundColor = Color.fromARGB(255, 0, 0, 0);
 
@@ -25,4 +26,20 @@ ThemeData appTheme = ThemeData(
     bodyLarge: TextStyle(color: primaryColor),
     bodySmall: TextStyle(color: primaryColor),
   ),
+);
+
+TextStyle secondaryTextStyle = TextStyle(
+  color: primaryColor.withValues(alpha: 0.8),
+  shadows: [
+    Shadow(
+      color: primaryColor.withValues(alpha: 0.8),
+      blurRadius: 2, 
+      offset: Offset.zero
+    ),
+  ],
+);
+
+TextStyle tertiaryTextStyle = TextStyle(
+  color: primaryColor.withValues(alpha: 0.65),
+  height: 1,
 );

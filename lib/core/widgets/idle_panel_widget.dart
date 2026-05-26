@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:signal/core/constants/colors.dart';
 
-class MenuPanelWidget extends StatelessWidget {
-  const MenuPanelWidget({super.key});
+class IdlePanelWidget extends StatelessWidget{
+
+  const IdlePanelWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +23,23 @@ class MenuPanelWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('SYS_MENU // ROOT', 
+          Text('SYS_CORE // STANDBY', 
             style: TextStyle(
               color: primaryColor.withValues(alpha: 0.8),
               shadows: [
                 Shadow(
                   color: primaryColor.withValues(alpha: 0.8),
                   blurRadius: 2, 
-                  offset: Offset(0, 0)
+                  offset: Offset.zero
                 ),
               ],
             ),
           ),
-          Text('> [01] LOG_ENTRY', style: TextStyle(height: 0, color: primaryColor.withValues(alpha: 1))),
-          Text('  [02] CHRONOLOGY', style: TextStyle(height: 0, color: primaryColor.withValues(alpha: 0.72))),
-          Text('  [03] ARCHIVE', style: TextStyle(height: 0, color: primaryColor.withValues(alpha: 0.72))),
-          Text('  [04] SYSTEM', style: TextStyle(height: 0, color: primaryColor.withValues(alpha: 0.72))),
+          Text('OPERATOR: AWAITING_AUTH', style: tertiaryTextStyle),
+          Text('ENCRYPTION_KEY: LOADED', style: tertiaryTextStyle),
+          Text('RADAR_DUMP: CLEAR', style: tertiaryTextStyle),
+          Text(''),
+          Text('[!] ENTER "/[option]"\nTO BRIDGE INTERFACE.',style: secondaryTextStyle),
         ],
       ),
     );

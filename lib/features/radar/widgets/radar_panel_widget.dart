@@ -3,23 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:signal/core/constants/colors.dart';
+import 'package:signal/features/radar/models/radar_ping.dart';
 
 final Random random = Random();
 
-/// =========================
-/// DATA
-/// =========================
-class RadarPing {
-  int x;
-  int y;
-  int life;
-
-  RadarPing(this.x, this.y, this.life);
-}
-
-/// =========================
-/// WIDGET
-/// =========================
 class RadarPanelWidget extends StatefulWidget {
   const RadarPanelWidget({super.key});
 
@@ -43,9 +30,6 @@ class _RadarPanelWidgetState
 
   Timer? timer;
 
-  // =========================
-  // INIT
-  // =========================
   @override
   void initState() {
     super.initState();
@@ -67,13 +51,9 @@ class _RadarPanelWidgetState
     super.dispose();
   }
 
-  // =========================
-  // RADAR LOGIC
-  // =========================
   void _updateRadar() {
 
-    // spawn aleatorio
-    if (random.nextDouble() < 0.01) {
+    if (random.nextDouble() < 0.005) {
       pings.add(
         RadarPing(
           random.nextInt(cols),
@@ -83,7 +63,6 @@ class _RadarPanelWidgetState
       );
     }
 
-    // decay vida
     for (final p in pings) {
       p.life--;
     }
@@ -91,9 +70,6 @@ class _RadarPanelWidgetState
     pings.removeWhere((p) => p.life <= 0);
   }
 
-  // =========================
-  // SWEEP DETECTION (limpio)
-  // =========================
   bool _isInSweep(int x, int y) {
     final dx = x - centerX;
     final dy = y - centerY;
@@ -110,18 +86,24 @@ class _RadarPanelWidgetState
     return minDiff < 0.4;
   }
 
-  // =========================
-  // RENDER
-  // =========================
   String get radarAscii {
 
     final buffer = List.generate(rows, (y) {
       return List.generate(cols, (x) {
 
-        // centro
+        // center
         if (x == centerX && y == centerY) {
           return '○';
         }
+
+        // broken leds
+        if ((x == 19 && y == 0) || x == 6 && y == 8)  {
+          return ' ';
+        }
+        if ((x == 20 && y == 8) || x == 2 && y == 6)  {
+          return '|';
+        }
+        
 
         RadarPing? ping;
 
@@ -134,38 +116,26 @@ class _RadarPanelWidgetState
 
         final inSweep = _isInSweep(x, y);
 
-        // =========================
-        // PINGS
-        // =========================
         if (ping != null) {
+          if (inSweep) {
+            ping.life += 3;
+            return '*';
+          }
 
-        // sweep detecta contacto (evento momentáneo)
-        if (inSweep) {
-          ping.life += 3;
-          return '*';
-        }
+          if (ping.life > 15) return '@';
+          if (ping.life > 8) return '#';
+          return '+';
+        }   
 
-        // estado del objeto
-        if (ping.life > 15) return '@';
-        if (ping.life > 8) return '#';
-        return '+';
-      }
+        if (inSweep) return ' ';
 
-      // =========================
-      // EMPTY GRID
-      // =========================
-      if (inSweep) return ' ';
-
-      return '·';
+        return '·';
       });
     });
 
     return buffer.map((r) => r.join(' ')).join('\n');
   }
 
-  // =========================
-  // UI
-  // =========================
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -180,17 +150,7 @@ class _RadarPanelWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'RADAR_MATRIX // ACTIVE',
-            style: TextStyle(
-              color: primaryColor.withValues(alpha: 1),
-              shadows: [
-                Shadow(
-                  color: primaryColor.withValues(alpha: 0.8),
-                  blurRadius: 2,
-                  offset: Offset(0, 0)
-                ),
-              ],
-            ),
+            'RADAR_MATRIX // ACTIVE', style: secondaryTextStyle,
           ),
           Expanded(
             child: FittedBox(
@@ -198,12 +158,11 @@ class _RadarPanelWidgetState
               child: Text(
                 radarAscii,
                 textWidthBasis: TextWidthBasis.longestLine,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                style: tertiaryTextStyle.copyWith(
                   fontFamily: 'IBM Plex Mono',
+                  fontWeight: FontWeight.bold,
                   height: 1.0,
-                  color: primaryColor.withValues(alpha: 0.72)
-                ),
+                ) 
               ),
             ),
           ),

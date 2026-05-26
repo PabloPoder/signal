@@ -229,7 +229,7 @@ color.rgb +=
     float scan =
         1.0 - lines;
 
-    float lineStrength = 0.075;
+    float lineStrength = 0.1;
 
     vec3 phosphorColor =
         mix(

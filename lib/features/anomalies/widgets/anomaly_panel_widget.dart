@@ -16,6 +16,7 @@ class _AnomalyPanelWidgetState extends State<AnomalyPanelWidget> {
 static const noAnomaly = [
 r'''
 稳定 ────── 0.12dB
+
 [█████░░░] 64%
 
 ▆▅▃▂▂        ▂▂▃▅▅
@@ -25,6 +26,7 @@ r'''
 
 r'''
 稳定 ────── 0.12dB
+
 [█████░░░] 64%
 
 ▅▆▅▃▂▂        ▂▂▃▅
@@ -34,6 +36,7 @@ r'''
 
 r'''
 稳定 ────── 0.12dB
+
 [█████░░░] 64%
 
 ▃▅▆▅▃▂▂        ▂▂▃
@@ -43,6 +46,7 @@ r'''
 
 r'''
 稳定 ────── 0.11dB
+
 [█████░░░] 64%
 
 ▂▃▅▆▅▃▂▂        ▂
@@ -52,6 +56,7 @@ r'''
 
 r'''
 稳定 ────── 0.11dB
+
 [█████░░░] 64%
 
   ▂▃▅▆▅▃▂▂      
@@ -61,6 +66,7 @@ r'''
 
 r'''
 稳定 ────── 0.11dB
+
 [█████░░░] 64%
 
     ▂▃█▇▅▃▂▂  
@@ -70,6 +76,7 @@ r'''
 
 r'''
 稳定 ────── 0.12dB
+
 [█████░░░] 64%
 
       ▂▃█▇▆▅▃▂   
@@ -79,6 +86,7 @@ r'''
 
 r'''
 稳定 ────── 0.13dB
+
 [█████░░░] 64%
 
 ▅        ▂▃▆▇▆▅▃▂
@@ -206,21 +214,11 @@ r'''
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('SIGNAL_ISOLATION // SECURE',
-          style: TextStyle(
-              color: primaryColor.withValues(alpha: 0.8),
-              shadows: [
-                Shadow(
-                  color: primaryColor.withValues(alpha: 0.8),
-                  blurRadius: 2,
-                  offset: Offset(0, 0)
-                ),
-              ],
-            ),
+          style: secondaryTextStyle
           ),
-          SizedBox(height: 8),
           Text(
             noAnomaly[frame],
-            style: TextStyle(height: 0, color: primaryColor.withValues(alpha: 0.72)),
+            style: tertiaryTextStyle,
           ),
         ],
       ),

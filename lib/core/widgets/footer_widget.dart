@@ -58,8 +58,8 @@ class _FooterWidgetState extends State<FooterWidget> {
           children: [
             _FooterItem(info: freqStates[frame]),
             _FooterItem(info: gainStates[frame]),
-            _FooterItem(info: sysmemStates[frame]),
             _FooterItem(info: "BUF: STABLE"),
+            _FooterItem(info: sysmemStates[frame]),
           ],
         ),
       ),

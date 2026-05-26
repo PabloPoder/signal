@@ -80,7 +80,7 @@ Personal Archive System""";
                 shadows: [
                   Shadow(
                     color: primaryColor,
-                    offset: Offset(0, 0),
+                    offset: Offset.zero,
                     blurRadius: 4
                   )
                 ]
