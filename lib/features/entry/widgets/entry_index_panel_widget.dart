@@ -53,7 +53,7 @@ class EntryIndexPanelWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ..._buildTextCounters(text),
-                  ..._buildProgressBar(text.length)
+                  _buildAnimatedProgressBar(text.length)
                 ],
               );
             }
@@ -82,22 +82,55 @@ class EntryIndexPanelWidget extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildProgressBar(int charCount) {
-    final double usageRatio = (charCount / maxBufferCapacity).clamp(0.0, 1.0);
-    final int usagePercentage = (usageRatio * 100).toInt();
+  Widget _buildAnimatedProgressBar(int charCount) {
+    final double targetUsageRatio = (charCount / maxBufferCapacity).clamp(0.0, 1.0);
 
-    const int totalBlocks = 10;
-    final int filledBlocks = (usageRatio * totalBlocks).round();
-    final int emptyBlocks = totalBlocks - filledBlocks;
-    String progressBar = ('█' * filledBlocks); 
-    if (emptyBlocks > 0) {
-      progressBar += '▒${'░' * (emptyBlocks -1 )}';
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0.0, end: targetUsageRatio),
+      duration: const Duration(milliseconds: 350), 
+      curve: Curves.easeOutQuad,
+      builder: (context, animatedRatio, child) {
+        final int currentPercentage = (animatedRatio * 100).toInt();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('BUFFER_USAGE: ${currentPercentage.toString().padLeft(3, '0')}%', style: secondaryTextStyle),
+            Text('[${_buildASCIIBar(animatedRatio)}]', style: secondaryTextStyle),
+          ],
+        );
+      },
+    );
+  }
+
+
+  String _buildASCIIBar(double usageRatio) {
+    const int totalBlocks = 10; 
+    final double preciseFilledBlocks = usageRatio * totalBlocks;
+    final int filledBlocks = preciseFilledBlocks.floor();
+    
+    String progressBar = '█' * filledBlocks; 
+
+    if (filledBlocks < totalBlocks) {
+      final double remainder = preciseFilledBlocks - filledBlocks;
+      
+      if (remainder >= 0.7) {
+        progressBar += '█'; 
+      } else if (remainder >= 0.4) {
+        progressBar += '▒'; 
+      } else if (remainder > 0.0) {
+        progressBar += '░'; 
+      } else {
+        progressBar += '░'; 
+      }
+      
+      final int remainingEmpty = totalBlocks - progressBar.characters.length;
+      if (remainingEmpty > 0) {
+        progressBar += '░' * remainingEmpty;
+      }
     }
 
-    return [
-      Text('BUFFER_USAGE: $usagePercentage%', style: secondaryTextStyle),
-      Text('[$progressBar]', style: secondaryTextStyle),
-    ];
+    return progressBar;
   }
-}
 
+}

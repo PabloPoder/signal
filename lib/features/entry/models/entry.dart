@@ -4,6 +4,7 @@ class Entry {
   final String content;
   final DateTime createdAt;
   final int corruptionLevel;
+  final int overwriteCnt;
   // final String[] tags
   // final anomalyFlags
   // locked
@@ -15,12 +16,14 @@ class Entry {
     required this.content,
     required this.createdAt,
     required this.corruptionLevel,
+    this.overwriteCnt = 0,
   });
   
   Entry copyWith({
     String? title,
     String? content,
     int? corruptionLevel,
+    int? overwriteCnt,
   }) {
     return Entry(
       id: id,
@@ -28,6 +31,7 @@ class Entry {
       content: content ?? this.content,
       createdAt: createdAt,
       corruptionLevel: corruptionLevel ?? this.corruptionLevel,
+      overwriteCnt: overwriteCnt ?? this.overwriteCnt,
     );
   }
 

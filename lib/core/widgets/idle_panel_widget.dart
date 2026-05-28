@@ -39,7 +39,7 @@ class IdlePanelWidget extends StatelessWidget{
           Text('ENCRYPTION_KEY: LOADED', style: tertiaryTextStyle),
           Text('RADAR_DUMP: CLEAR', style: tertiaryTextStyle),
           Text(''),
-          Text('[!] ENTER "/[option]"\nTO BRIDGE INTERFACE.',style: secondaryTextStyle),
+          Text('[!] ENTER "/[option]"\nTO BRIDGE INTERFACE.', style: secondaryTextStyle),
         ],
       ),
     );

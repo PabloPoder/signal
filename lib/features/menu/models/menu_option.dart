@@ -1,11 +1,14 @@
+/// Types of Menu Sections -> each panel
 enum MenuSection {
   idle,
   logEntry,
   chronology,
+  entryDetail,
   archive,
   system,
 }
 
+/// Representation of how a Menu Option is composed.
 class MenuOption {
   final MenuSection section;
   final String label;

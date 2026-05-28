@@ -5,10 +5,10 @@
 
 import 'package:flutter/material.dart';
 
-const Color white = Color(0xFFE6F1FF);
+// const Color primaryColor = Color(0xFFE6F1FF);
 // const Color primaryColor =  Color(0xFFFF9100);
 const Color primaryColor =  Color.fromARGB(255, 40, 251, 164);
-// const Color primaryColor = Color.fromARGB(255, 0, 255, 85);
+// const Color primaryColor = Color(0xFFFF0022);
 const Color apocaliptic = Color(0xFFFFBF00);
 const Color zomb = Color(0xFFFF0022);
 const Color cyberpunk = Color(0xFF00F0FF);

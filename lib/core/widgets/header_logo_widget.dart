@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:signal/core/constants/colors.dart';
+import 'package:signal/core/utils/date_parser.dart';
 
 class HeaderLogoWidget extends StatefulWidget {
   const HeaderLogoWidget({super.key});
@@ -19,11 +20,7 @@ class _HeaderLogoWidgetState extends State<HeaderLogoWidget> {
 Personal Archive System""";
 
   late DateTime _currentTime;
-  static const months = [
-    'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-    'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'
-  ];
-
+  
 
   @override
   void initState() {
@@ -39,19 +36,6 @@ Personal Archive System""";
       });
       Future.delayed(const Duration(seconds: 1), _updateTime);
     }
-  }
-
-  String _formatTime(DateTime dateTime) {
-    final year = dateTime.year;
-    final month = months[dateTime.month - 1];
-    final day = dateTime.day;
-    final hour = dateTime.hour;
-    final minute = dateTime.minute;
-    final isAM = hour < 12;
-    final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-    final minuteStr = minute.toString().padLeft(2, '0');
-    final period = isAM ? 'am' : 'pm';
-    return '$displayHour:$minuteStr$period // $day $month $year';
   }
 
   @override
@@ -87,7 +71,7 @@ Personal Archive System""";
               ),
             ),
             Text(
-              '[ ${_formatTime(_currentTime)} ]',
+              '[ ${formatTimeWithHour(_currentTime)} ]',
               style: const TextStyle(
                 color: primaryColor,
               ),

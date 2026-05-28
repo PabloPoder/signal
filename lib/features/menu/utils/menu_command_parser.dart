@@ -3,9 +3,8 @@
 import 'package:signal/features/menu/models/menu_option.dart';
 import 'package:signal/features/menu/data/menu_options.dart';
 
-/// Find and return the MenuOption from the [command].
-///
-/// Return 'MenuOption' or null
+
+/// Searches for a registered [MenuOption] that matches the given input.
 MenuOption? findMenuOptionFromCommand(String command) {
   final normalized = command
       .trim()

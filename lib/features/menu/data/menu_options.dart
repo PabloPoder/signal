@@ -4,7 +4,7 @@ final menuOptions = [
   MenuOption(
     section: MenuSection.logEntry,
     label: '[01] LOG_ENTRY', 
-    aliases: ['/log_entry', '/entry', '/new', '/log'],
+    aliases: ['/log_entry', '/new', '/log'],
     logs: [
       '[INIT] INTERFACE_BRIDGE_LOCAL_TEXT_RECORDER_ACTIVE',
       '[INIT] BUFFER_STREAM_OPENED',
@@ -15,12 +15,12 @@ final menuOptions = [
   MenuOption(
     section: MenuSection.chronology,
     label: '[02] CHRONOLOGY', 
-    aliases: ['/chronology'],
+    aliases: ['/chronology', '/chrono'],
     logs: [
-      '[INIT] TIMELINE_SCANNER_INDEXING_HISTORICAL_TIMESTAMPS',
-      '[ OK ] DISK_INDEX_MAPPED',
-      '[ OK ] SECTOR_TIMESTAMPS_VERIFIED',
-      '[WARN] CORRUPTED_BLOCKS_DETECTED',
+      '[INIT] INITIALIZING_CHRONOLOGY_FETCH',
+      '[ OK ] DATABASE_LINK_ESTABLISHED',
+      '[SYNC] MAPPING_TEMPORAL_SECTORS', 
+      '[ OK ] INDEX_INTEGRITY_VERIFIED',
     ],
   ),
   MenuOption(

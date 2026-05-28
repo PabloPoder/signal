@@ -213,11 +213,12 @@ r'''
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('SIGNAL_ISOLATION // SECURE',
-          style: secondaryTextStyle
+          Text(
+            'SIGNAL_ISOLATION // SECURE',
+            style: secondaryTextStyle
           ),
           Text(
-            noAnomaly[frame],
+            anomalyDetected[frame],
             style: tertiaryTextStyle,
           ),
         ],
