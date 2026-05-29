@@ -2,15 +2,15 @@ import 'package:signal/features/entry_detail/models/entry_details_command.dart';
 
 final entryDetailCommands = [
   EntryDetailCommand(
-    type: EntryDetailCommandType.patch,
-    aliases: ['/patch', '/rewrite', '/inject', '/override', '/edit', '/mod'],
+    type: EntryDetailCommandType.annotate,
+    aliases: ['/annotate', '/comment', '/note'],
     successLogs: [
-      '[ OK ] MEMORY_PATCH_APPLIED',
+      '[ OK ] MEMORY_ANNOTATION_APPLIED',
       '[CORR] NODE_STRUCTURE_STABILIZED',
       '[SYNC] CHRONOLOGY_INDEX_UPDATED',
     ],
     errorLogs: [
-      '[FAIL] PATCH_SEQUENCE_REJECTED',
+      '[FAIL] ANNOTATION_SEQUENCE_REJECTED',
       '[FAIL] NODE_WRITE_CONFLICT_DETECTED',
       '[CRIT] MEMORY_LAYER_DESYNCHRONIZED',
     ],

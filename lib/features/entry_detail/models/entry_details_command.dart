@@ -1,7 +1,7 @@
 enum EntryDetailCommandType {
-  patch,    // Edit
-  delete,   // Delete
-  decode,   // Fix
+  annotate,   // CreateAnnotation
+  delete,     // Delete
+  decode,     // Fix
   back,
 }
 

@@ -51,3 +51,17 @@ String buildFragmentationPattern(double ratio) {
 
   return chars.join(' ');
 }
+
+
+(String wordCount, String charCount) buildTextCounters(String text) {
+  final charCount = text.length;
+  
+  final wordCount = text.trim().isEmpty
+      ? 0
+      : text.trim().split(RegExp(r'\s+')).length;
+
+  return (
+    wordCount.toString().padLeft(3, '0'), 
+    charCount.toString().padLeft(3, '0')
+  );      
+}

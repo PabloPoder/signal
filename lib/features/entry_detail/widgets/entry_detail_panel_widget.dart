@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:signal/core/constants/colors.dart';
 import 'package:signal/core/utils/ascii_visuals.dart';
-import 'package:signal/core/utils/date_parser.dart';
 import 'package:signal/core/widgets/ascii_bar_widget.dart';
 import 'package:signal/features/entry/models/entry.dart';
 
@@ -16,10 +15,24 @@ class EntryDeatilPanelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final corruptionRatio =
+    final dataFragmentation =
       (entry.corruptionLevel / 100).clamp(0.0, 1.0);
 
-    final integrityRatio = 1 - corruptionRatio;
+    final integrityRatio = 1 - dataFragmentation;
+
+   final recoverabilityTag =
+      entry.recoverability > 80
+          ? 'VIABLE'
+          : entry.recoverability > 40
+              ? 'PARTIAL'
+              : 'COLLAPSE';
+              
+    final signalNoiseTag = 
+      entry.corruption.signalNoise > 60
+        ? 'CRITICAL'
+        : entry.corruption.signalNoise > 25
+            ? 'UNSTABLE'
+            : 'LOW';
 
     return Container(
       padding: EdgeInsets.all(8),
@@ -48,16 +61,19 @@ class EntryDeatilPanelWidget extends StatelessWidget {
             ),
           ),
           Text(
-            'DATE_CREATED: ${formatTime(entry.createdAt)}',
+            'OVERWRITE_COUNT: ${entry.overwriteCount.toString().padLeft(3, '0')}',
             style: tertiaryTextStyle,
           ),
-          // Text(
-          //   'OVERWRITE_CNT: ${entry.overwriteCnt}',
-          //   style: tertiaryTextStyle,
-          // ),
-          ..._buildTextCounters(entry.content),
           Text(
-            'MEMORY_INTEGRITY:',
+            'SIGNAL_NOISE: $signalNoiseTag',
+            style: tertiaryTextStyle,
+          ),
+          Text(
+            'RECOVERABILITY: $recoverabilityTag',
+            style: tertiaryTextStyle,
+          ),
+          Text(
+            'ARCHIVE_INTEGRITY:',
             style: secondaryTextStyle,
           ),
           AsciiBarWidget(
@@ -69,7 +85,7 @@ class EntryDeatilPanelWidget extends StatelessWidget {
             style: secondaryTextStyle,
           ),
           AsciiBarWidget(
-            ratio: corruptionRatio,
+            ratio: dataFragmentation,
             builder: buildFragmentationPattern,
             showBrackets: false,
             showPercentage: false,
@@ -77,24 +93,5 @@ class EntryDeatilPanelWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-List<Widget> _buildTextCounters(String text) {
-    final charCount = text.length;
-    
-    final wordCount = text.trim().isEmpty
-        ? 0
-        : text.trim().split(RegExp(r'\s+')).length;
-
-    return [
-      Text(
-        'WORD_CNT: ${wordCount.toString().padLeft(3, '0')}', 
-        style: tertiaryTextStyle,
-      ),
-      Text(
-        'CHAR_CNT: ${charCount.toString().padLeft(3, '0')}', 
-        style: tertiaryTextStyle,
-      ),
-    ];
   }
 }

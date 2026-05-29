@@ -28,18 +28,10 @@ TerminalResponse? handleEntryCommands(
         clearOutput: true,
         clearTerminal: true,
       );
-
-    // default:
-    //   return TerminalResponse(
-    //     success: false,
-    //     logs: ['[FAIL] UNKNOW_COMMAND_CONTEXT'],
-    //     clearOutput: true,
-    //   );
   }
 }
 
 /// INTERNAL ACTIONS
-
 bool _saveEntry(WidgetRef  ref, String terminalBuffer) {
   final entryLog = parseEntryBuffer(terminalBuffer);
 

@@ -176,10 +176,10 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
 
   (int terminalOutputFlex, int terminalFrameFlex) get _consoleFlexDistribution {
     return switch (selectedSection) {
-      MenuSection.chronology => (4, 1), // Reading Mode
-      MenuSection.entryDetail => (4, 1), 
+      MenuSection.chronology => (5, 1), // Reading Mode
+      MenuSection.entryDetail => (5, 1), 
       MenuSection.logEntry => (2, 5),   // Writing Mode
-      _ => (2, 5)                       // Default
+      _ => (1, 5)                       // Default
     };
   }
 
