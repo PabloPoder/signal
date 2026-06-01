@@ -71,7 +71,7 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
   }
   
   TerminalResponse? _dispatchCommand(ParsedCommand command) {
-    final menuResponse = handleMenuCommands(ref, command);
+    final menuResponse = handleMenuCommands(ref, command, selectedSection);
 
     if (menuResponse != null) {
       return menuResponse;
@@ -118,7 +118,6 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
     if (response != null) {
       _renderResponse(response);
     }
-
   }
 
   Future<void> _renderResponse(TerminalResponse response) async {
@@ -134,16 +133,21 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
       });
     }
 
-    /// 4. update 
+    /// 3. update section
     setState(() {
-      if (response.nextSection != null) {
-        selectedSection = response.nextSection!;
-      }
+      selectedSection =
+          response.nextSection ?? selectedSection;
 
-      selectedEntry = response.selectedEntry;
+      selectedEntry =
+          response.selectedEntry ?? selectedEntry;
     });
 
-    /// 4. render logs
+    /// 4. load inital buffer
+    if (response.terminalBuffer != null) {
+        terminalInputController.text = response.terminalBuffer!;
+    }
+
+    /// 5. render logs
     await _playSyncAnimation(response.logs);
   }
   
@@ -174,12 +178,15 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
     });
   }
 
-  (int terminalOutputFlex, int terminalFrameFlex) get _consoleFlexDistribution {
+  (
+    int terminalOutputFlex, 
+    int terminalFrameFlex,
+  ) get _consoleFlexDistribution {
     return switch (selectedSection) {
-      MenuSection.chronology => (5, 1), // Reading Mode
-      MenuSection.entryDetail => (5, 1), 
-      MenuSection.logEntry => (2, 5),   // Writing Mode
-      _ => (1, 5)                       // Default
+      MenuSection.chronology => (5, 1),   // CHORNOLOGY MODE
+      MenuSection.entryDetail => (5, 1),  // INSPECT MODE
+      MenuSection.logEntry => (2, 5),     // Writing Mode
+      _ => (5, 1)                         // DEFAULT 
     };
   }
 

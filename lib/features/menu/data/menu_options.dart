@@ -15,7 +15,7 @@ final menuOptions = [
   MenuOption(
     section: MenuSection.chronology,
     label: '[02] CHRONOLOGY', 
-    aliases: ['/chronology', '/chrono'],
+    aliases: ['/chronology', '/chrono', '/timeline'],
     logs: [
       '[INIT] INITIALIZING_CHRONOLOGY_FETCH',
       '[ OK ] DATABASE_LINK_ESTABLISHED',

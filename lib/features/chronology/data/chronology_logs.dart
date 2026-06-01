@@ -1,15 +1,15 @@
+import 'package:signal/core/constants/colors.dart';
+
 final chronologyHeaderLogs = [
-  '   ID  | INDEX_DATE | NODE_TITLE',
-  '----------------------------------------------------',
+  '   ID    INDEX_DATE   NODE_TITLE',
+  '-' * maxTerminalWidth,
 ];
 
 final chronologyFooterLogs = [
-  '--------------------------------------------------',
-  '> [REQ] INPUT: /inspect [id] TO ACCESS_BUFFER',
+  '-' * maxTerminalWidth,
 ];
 
 final chronologyEmptyLogs = [
   ' NO_RECORDS_FOUND_IN_THIS_SECTOR',
-  '----------------------------------------------------',
-  '> [REQ ] /log_entry TO RECORD_LOCAL',
+  '-' * maxTerminalWidth,
 ];

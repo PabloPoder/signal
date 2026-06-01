@@ -4,6 +4,7 @@ final entryCommands = [
   EntryCommand(
     type: EntryCommandType.save,
     aliases: ['/sync', '/commit', '/save'],
+    description: "Syncs current node to local storage.",
     successLogs: [
       '[ OK ] MEMORY_FRAGMENT_ARCHIVED',
       '[ OK ] ENTRY_CHECKSUM_VALID',

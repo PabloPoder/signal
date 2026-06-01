@@ -73,14 +73,6 @@ class EntryDeatilPanelWidget extends StatelessWidget {
             style: tertiaryTextStyle,
           ),
           Text(
-            'ARCHIVE_INTEGRITY:',
-            style: secondaryTextStyle,
-          ),
-          AsciiBarWidget(
-            ratio: integrityRatio, 
-            builder: buildPercentageBar,
-          ),
-          Text(
             'DATA_FRAGMENTATION:',
             style: secondaryTextStyle,
           ),
@@ -89,6 +81,14 @@ class EntryDeatilPanelWidget extends StatelessWidget {
             builder: buildFragmentationPattern,
             showBrackets: false,
             showPercentage: false,
+          ),
+          Text(
+            'ARCHIVE_INTEGRITY:',
+            style: secondaryTextStyle,
+          ),
+          AsciiBarWidget(
+            ratio: integrityRatio, 
+            builder: buildPercentageBar,
           ),
         ],
       ),

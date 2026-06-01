@@ -4,6 +4,7 @@ import 'package:signal/core/terminal/responses/terminal_response.dart';
 import 'package:signal/features/entry/models/entry_command.dart';
 import 'package:signal/features/entry/providers/entry_provider.dart';
 import 'package:signal/features/entry/utils/entry_parsers.dart';
+import 'package:signal/features/entry/utils/template.dart';
 import 'package:signal/features/menu/models/menu_option.dart';
 
 TerminalResponse? handleEntryCommands(
@@ -21,6 +22,7 @@ TerminalResponse? handleEntryCommands(
       final logs = isSaved
           ? entryCommandSelected.successLogs
           : entryCommandSelected.errorLogs;
+          
       return TerminalResponse(
         success: isSaved,
         logs: logs,
@@ -32,17 +34,25 @@ TerminalResponse? handleEntryCommands(
 }
 
 /// INTERNAL ACTIONS
-bool _saveEntry(WidgetRef  ref, String terminalBuffer) {
+bool _saveEntry(WidgetRef ref, String terminalBuffer) {
   final entryLog = parseEntryBuffer(terminalBuffer);
 
-  if (entryLog != null) {
-    final (title, content) = entryLog;
+  if (entryLog == null) return false;
 
-    ref
-        .read(entryProvider.notifier)
-        .createEntry(title: title, content: content, corruptionLevel: 0);
+  final (title, content) = entryLog;
 
-    return true;
+  final template = parseEntryBuffer(entryLogTemplate)!;
+  final (templateTitle, _) = template;
+
+  if (title == templateTitle) {
+    return false;
   }
-  return false;
+
+  ref.read(entryProvider.notifier).createEntry(
+    title: title,
+    content: content,
+    corruptionLevel: 0,
+  );
+
+  return true;
 }

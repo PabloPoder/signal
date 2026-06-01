@@ -218,7 +218,7 @@ r'''
             style: secondaryTextStyle
           ),
           Text(
-            anomalyDetected[frame],
+            noAnomaly[frame],
             style: tertiaryTextStyle,
           ),
         ],

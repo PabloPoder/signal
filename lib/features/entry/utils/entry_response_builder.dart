@@ -1,4 +1,5 @@
 
+import 'package:signal/core/constants/colors.dart';
 import 'package:signal/core/terminal/responses/terminal_response.dart';
 import 'package:signal/core/utils/date_parser.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
@@ -35,14 +36,14 @@ TerminalResponse buildEntryDetailResponse(
     logs: [
       ...mountLogs,
       '[${entry.id}] DATA_BUFFER_STREAM',
-      '--------------------------------------------------',
+      '-' * maxTerminalWidth,
       'TITLE: ${entry.title}',
       'DATE: ${formatTime(entry.createdAt)}',
       'WORD_COUNT: $wordCount CHAR_COUNT: $charCount',
       'NODE_ID: ARG-01_CHRONO_N${entry.id}',
-      'RAW_TELEMETRY: [ $rawTelemetry ]',
+      // 'RAW_TELEMETRY: [ $rawTelemetry ]',
       'ANNOTATIONS_COUNT: ${entry.annotationCount.toString().padLeft(3, '0')}',
-      '--------------------------------------------------',
+      '-' * maxTerminalWidth,
       renderedContent,
       ...annotationsLogs,
     ],

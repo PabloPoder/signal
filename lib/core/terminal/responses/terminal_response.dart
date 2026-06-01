@@ -10,6 +10,7 @@ class TerminalResponse {
   final bool clearTerminal;
   final bool clearOutput;
 
+  final String? terminalBuffer;
   final Entry? selectedEntry;
   final MenuSection? rebuildSection;
 
@@ -19,6 +20,7 @@ class TerminalResponse {
     this.nextSection,
     this.clearTerminal = true,
     this.clearOutput = false,
+    this.terminalBuffer = '',
     this.selectedEntry,
     this.rebuildSection,
   });

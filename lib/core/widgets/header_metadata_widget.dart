@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:signal/core/constants/colors.dart';
 
 class HeaderMetadataWidget extends StatefulWidget {
   const HeaderMetadataWidget({super.key});
@@ -70,10 +71,22 @@ class _HeaderMetadataWidgetState extends State<HeaderMetadataWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(nodeText),
-          Text("SECTOR: ${HeaderMetadataWidget.sectors[HeaderMetadataWidget.randomSector]}"),
-          Text("STATUS: STABLE"),
-          Text("PORT.....${HeaderMetadataWidget.randomPort}"),
+          Text(
+            nodeText, 
+            style: warningTextStyle,
+          ),
+          Text(
+            "SECTOR: ${HeaderMetadataWidget.sectors[HeaderMetadataWidget.randomSector]}",
+            style: warningTextStyle,
+          ),
+          Text(
+            "STATUS: STABLE",
+            style: warningTextStyle,
+          ),
+          Text(
+            "PORT.....${HeaderMetadataWidget.randomPort}",
+            style: warningTextStyle,
+          ),
         ],
       ),
     );

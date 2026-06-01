@@ -58,3 +58,7 @@ flutter:
         - asset: assets/fonts/IBMPlexMono-Regular.ttf
           style: normal
 
+    # - family: Levi AdobeDia
+    #   fonts:
+    #     - asset: assets/fonts/LeviAdobeDia.ttf
+    #       style: normal

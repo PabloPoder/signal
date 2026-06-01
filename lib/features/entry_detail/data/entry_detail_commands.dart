@@ -4,6 +4,7 @@ final entryDetailCommands = [
   EntryDetailCommand(
     type: EntryDetailCommandType.annotate,
     aliases: ['/annotate', '/comment', '/note'],
+    description: "Appends telemetry annotation to node stream.",
     successLogs: [
       '[ OK ] MEMORY_ANNOTATION_APPLIED',
       '[CORR] NODE_STRUCTURE_STABILIZED',
@@ -18,7 +19,8 @@ final entryDetailCommands = [
 
   EntryDetailCommand(
     type: EntryDetailCommandType.delete,
-    aliases: ['/delete', '/purge', '/burn', '/erase', '/wipe'],
+    aliases: ['/purge', '/burn', '/erase'],
+    description: "Purges node from the registry.",
     successLogs: [
       '[ OK ] MEMORY_NODE_PURGED',
       '[VOID] ARCHIVE_REFERENCE_REMOVED', 
@@ -33,7 +35,8 @@ final entryDetailCommands = [
 
   EntryDetailCommand(
     type: EntryDetailCommandType.decode,
-    aliases: ['/decode', '/recover', '/restore', '/repair', '/fix', '/decrypt'],
+    aliases: ['/decode', '/fix', '/decrypt'],
+    description: "Decrypts stream based on recoverability.",
     successLogs: [
       '[ OK ] SIGNAL_PATTERN_RESTORED',
       '[DCD*] CORRUPTION_LAYER_REMOVED',
@@ -48,10 +51,14 @@ final entryDetailCommands = [
 
   EntryDetailCommand(
     type: EntryDetailCommandType.back,
-    aliases: ['/back'],
+    aliases: ['/back', '/exit', '/return'],
+    description: "Returns to the master directory.",
     successLogs: [
+      '[ OK ] DETAIL_STREAM_TERMINATED',
+      '[SYNC] DIRECTORY_INDEX_RECALLED',
     ],
     errorLogs: [
+      '[FAIL] INTERFACE_THREAD_LOCKED',
     ],
   ),
 ];
