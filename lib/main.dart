@@ -3,13 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:signal/core/audio/audio_service.dart';
 
 import 'package:signal/core/signal_terminal_screen.dart';
 import 'package:signal/core/constants/colors.dart';
 import 'package:window_size/window_size.dart';
 
-void main()  async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -39,9 +38,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: terminalBackgroundColor,
         textTheme: TextTheme(
           bodyMedium: TextStyle(
-            fontFamily: 'VT323',
+            fontFamily: 'Fixedsys62',
             color: primaryColor.withValues(alpha: 0.72),
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ),
@@ -50,23 +49,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class Pixelate extends StatelessWidget {
   final Widget child;
   final double pixelScale;
 
-  const Pixelate({
-    super.key,
-    required this.child,
-    this.pixelScale = 2,
-  });
+  const Pixelate({super.key, required this.child, this.pixelScale = 2});
 
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        devicePixelRatio: 2 / pixelScale,
-      ),
+      data: MediaQuery.of(context).copyWith(devicePixelRatio: 2 / pixelScale),
       child: child,
     );
   }

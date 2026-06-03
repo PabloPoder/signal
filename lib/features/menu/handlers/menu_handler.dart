@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:signal/core/constants/about_ascii.dart';
 import 'package:signal/core/constants/colors.dart';
 import 'package:signal/core/terminal/models/terminal_command.dart';
 import 'package:signal/core/terminal/models/parsed_command.dart';
 import 'package:signal/core/terminal/responses/terminal_response.dart';
+import 'package:signal/core/utils/date_parser.dart';
 import 'package:signal/features/chronology/data/chronology_commands.dart';
 import 'package:signal/features/chronology/data/chronology_logs.dart';
 import 'package:signal/features/entry/data/entry_commands.dart';
@@ -47,14 +49,11 @@ TerminalResponse? handleMenuCommands(
       clearOutput: true,
       clearTerminal: true,
       terminalBuffer: entryLogTemplate,
-    );  
+    );
   }
 
   if (menuOptionSelected.section == MenuSection.chronology) {
-    return buildChronologyResponse(
-      ref,
-      mountLogs: menuOptionSelected.logs,
-    );
+    return buildChronologyResponse(ref, mountLogs: menuOptionSelected.logs);
   }
 
   return TerminalResponse(
@@ -67,11 +66,11 @@ TerminalResponse? handleMenuCommands(
 }
 
 /// INTERNAL ACTIONS
-/// 
+///
 TerminalResponse _buildHelpResponse(MenuSection currentSection) {
-  List<TerminalCommand> commands = []; 
+  List<TerminalCommand> commands = [];
 
-  switch(currentSection) {
+  switch (currentSection) {
     case MenuSection.logEntry:
       commands = entryCommands;
       break;
@@ -79,7 +78,7 @@ TerminalResponse _buildHelpResponse(MenuSection currentSection) {
     case MenuSection.entryDetail:
       commands = entryDetailCommands;
       break;
-    
+
     case MenuSection.chronology:
       commands = chronologyCommands;
       break;
@@ -88,7 +87,7 @@ TerminalResponse _buildHelpResponse(MenuSection currentSection) {
       commands = [
         ...entryCommands,
         ...entryDetailCommands,
-        ...chronologyCommands
+        ...chronologyCommands,
       ];
       break;
 
@@ -102,16 +101,12 @@ TerminalResponse _buildHelpResponse(MenuSection currentSection) {
   final logs = [
     '',
     'COMMAND_INDEX',
-    '-' * maxTerminalWidth,
+    '─' * maxTerminalWidth,
     ..._buildCommandsLogs(commands),
   ];
 
-  return TerminalResponse(
-    success: true,
-    logs: logs,
-  );
+  return TerminalResponse(success: true, logs: logs);
 }
-
 
 TerminalResponse _buildClearResponse(MenuSection currentSection) {
   return TerminalResponse(
@@ -131,21 +126,16 @@ TerminalResponse _buildAboutResponse(MenuSection currentSection) {
   );
 }
 
-
 TerminalResponse buildChronologyResponse(
   WidgetRef ref, {
-  List<String> mountLogs = const[],
+  List<String> mountLogs = const [],
 }) {
   final entries = ref.read(entryProvider);
 
   if (entries.isEmpty) {
     return TerminalResponse(
       success: true,
-      logs: [
-        ...mountLogs,
-        '',
-        ...chronologyEmptyLogs,
-      ],
+      logs: [...mountLogs, '', ...chronologyEmptyLogs],
       nextSection: MenuSection.chronology,
       clearOutput: true,
       clearTerminal: true,
@@ -157,7 +147,7 @@ TerminalResponse buildChronologyResponse(
     '',
     ...chronologyHeaderLogs,
     ..._buildChronologyEntryLogs(entries),
-    // ...chronologyFooterLogs, '-----'
+    ...chronologyFooterLogs,
   ];
 
   return TerminalResponse(
@@ -172,7 +162,7 @@ TerminalResponse buildChronologyResponse(
 
 List<String> _buildCommandsLogs(List<TerminalCommand> commands) {
   final List<String> logs = [];
-  
+
   for (final menuOption in menuOptions) {
     final aliases = menuOption.aliases.join(' • ');
 
@@ -180,7 +170,7 @@ List<String> _buildCommandsLogs(List<TerminalCommand> commands) {
     logs.add('  └─> Mounts localized system sector.');
   }
 
-  logs.add('');
+  logs.add('─' * maxTerminalWidth);
 
   for (final cmd in commands) {
     final aliases = cmd.aliases.join(' • ');
@@ -196,30 +186,24 @@ List<String> _buildChronologyEntryLogs(List<Entry> entries) {
   final List<String> chronologyLogs = [];
 
   for (int i = 0; i < entries.length; i++) {
-    chronologyLogs.add(
-      _formatChronologyEntry(i, entries[i]),
-    );
+    chronologyLogs.add(_formatChronologyEntry(i, entries[i]));
   }
 
   return chronologyLogs;
 }
 
 String _formatChronologyEntry(int index, Entry entry) {
-  final String idStr = (index + 1)
-      .toString()
-      .padLeft(2, '0');
+  final String idStr = (index + 1).toString().padLeft(2, '0');
 
-  final String nodeDate =
-      '${entry.createdAt.year}.'
-      '${entry.createdAt.month.toString().padLeft(2, '0')}.'
-      '${entry.createdAt.day.toString().padLeft(2, '0')}';
+  final String nodeDate = formatTime(entry.createdAt);
 
   String titleStr = entry.title.toUpperCase();
 
   final finalLine = '> [$idStr] · $nodeDate · $titleStr';
 
   if (finalLine.length > maxTerminalWidth) {
-    return '${'> [$idStr] · $nodeDate · $titleStr'.substring(0, maxTerminalWidth -3)}...';
+    // TODO: pad left $nodeDate
+    return '${'> [$idStr] · $nodeDate · $titleStr'.substring(0, maxTerminalWidth - 3)}...';
   }
 
   return finalLine;

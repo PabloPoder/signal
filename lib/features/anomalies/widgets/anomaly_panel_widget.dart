@@ -1,226 +1,108 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:signal/core/constants/colors.dart';
+import 'package:signal/features/anomalies/models/anomaly.dart';
+import 'package:signal/features/anomalies/providers/anomaly_provider.dart';
+import 'package:signal/features/anomalies/widgets/anomaly_detecting_panel_widget.dart';
+import 'package:signal/features/anomalies/widgets/anomaly_idle_panel_widget.dart';
+import 'package:signal/features/anomalies/widgets/anomaly_tracked_panel_widget.dart';
 
-class AnomalyPanelWidget extends StatefulWidget {
+enum PanelState { idle, detecting, tracked }
+
+class AnomalyPanelWidget extends ConsumerStatefulWidget {
   const AnomalyPanelWidget({super.key});
 
   @override
-  State<AnomalyPanelWidget> createState() => _AnomalyPanelWidgetState();
+  ConsumerState<AnomalyPanelWidget> createState() => _AnomalyPanelWidgetState();
 }
 
+class _AnomalyPanelWidgetState extends ConsumerState<AnomalyPanelWidget> {
+  PanelState panelState = PanelState.idle;
 
-class _AnomalyPanelWidgetState extends State<AnomalyPanelWidget> {
+  Anomaly? currentAnomaly;
+  static const detectionDuration = Duration(seconds: 8);
+  static const trackedDuration = Duration(minutes: 2);
 
-static const noAnomaly = [
-r'''
-稳定 ────── 0.12dB
+  Timer? detectionTimer;
+  Timer? trackedTimer;
 
-[█████░░░] 64%
+  void _handleNewAnomaly(Anomaly anomaly) {
+    currentAnomaly = anomaly;
 
-▆▅▃▂▂        ▂▂▃▅▅
+    detectionTimer?.cancel();
+    trackedTimer?.cancel();
 
-[NO_ANOMALIES_DETECTED]
-''', 
+    setState(() {
+      panelState = PanelState.detecting;
+    });
+    detectionTimer = Timer(detectionDuration, () {
+      if (!mounted) return;
 
-r'''
-稳定 ────── 0.12dB
+      setState(() {
+        panelState = PanelState.tracked;
+      });
 
-[█████░░░] 64%
+      trackedTimer = Timer(trackedDuration, () {
+        if (!mounted) return;
 
-▅▆▅▃▂▂        ▂▂▃▅
-
-[NO_ANOMALIES_DETECTED]
-''', 
-
-r'''
-稳定 ────── 0.12dB
-
-[█████░░░] 64%
-
-▃▅▆▅▃▂▂        ▂▂▃
-
-[NO_ANOMALIES_DETECTED]
-''', 
-
-r'''
-稳定 ────── 0.11dB
-
-[█████░░░] 64%
-
-▂▃▅▆▅▃▂▂        ▂
-
-[NO_ANOMALIES_DETECTED]
-''',
-
-r'''
-稳定 ────── 0.11dB
-
-[█████░░░] 64%
-
-  ▂▃▅▆▅▃▂▂      
-
-[NO_ANOMALIES_DETECTED]
-''',
-
-r'''
-稳定 ────── 0.11dB
-
-[█████░░░] 64%
-
-    ▂▃█▇▅▃▂▂  
-
-[NO_ANOMALIES_DETECTED]
-''',
-
-r'''
-稳定 ────── 0.12dB
-
-[█████░░░] 64%
-
-      ▂▃█▇▆▅▃▂   
-
-[NO_ANOMALIES_DETECTED]
-''',
-
-r'''
-稳定 ────── 0.13dB
-
-[█████░░░] 64%
-
-▅        ▂▃▆▇▆▅▃▂
-
-[NO_ANOMALIES_DETECTED]
-'''
-];
-static const anomalyDetected = [
-r'''
-  /\    SYS_ERR_018
- < O>   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] 100%
-
-[CRITICAL_SYSTEM_OVERRIDE]
-''',
-
-r'''
-  /\    SYS_ERR_018
- < o>   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] 100%
-
-[CRITICAL_SYSTEM_OVERRIDE]
-''',
-
-r'''
-  /\    SYS_ERR_018
- < ->   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] 100%
-
-[CRITICAL_SYSTEM_OVERRIDE]
-''',
-
-r'''
-  /\    SYS_ERR_018
- <  >   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] 99%
-
-[TARGET_LOCK_ESTABLISHED]
-''',
-
-r'''
-  /\    SYS_ERR_018
- < ->   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] @*&$
-
-[TARGET_LOCK_ESTABLISHED]
-''',
-
-r'''
-  /\    SYS_ERR_018
- < o>   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] #%?!
-
-[TARGET_LOCK_ESTABLISHED]
-''',
-
-r'''
-  /\    SYS_ERR_018
- < O>   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] XXXXX
-
-[CRITICAL_SYSTEM_OVERRIDE]
-''',
-
-r'''
-  /\    SYS_ERR_018
- < o>   SOURCE: [UNKNOWN]
-  \/    SECTOR: EAST
-[████████] 100%
-
-[CRITICAL_SYSTEM_OVERRIDE]
-'''
-];
-
-
-  Timer? timer;
-
-  int frame = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    timer = Timer.periodic(
-      const Duration(milliseconds: 300), 
-      _updateFrameState
-      );
+        setState(() {
+          panelState = PanelState.idle;
+        });
+      });
+    });
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    detectionTimer?.cancel();
+    trackedTimer?.cancel();
     super.dispose();
   }
 
-  void _updateFrameState(_) {
-    setState(() {
-      frame = (frame + 1) % 8;
-    });
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
+    final anomalies = ref.watch(anomalyProvider);
+
+    final latestAnomaly = anomalies.isNotEmpty ? anomalies.last : null;
+
+    if (latestAnomaly != null && latestAnomaly.id != currentAnomaly?.id) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _handleNewAnomaly(latestAnomaly);
+      });
+    }
+
     return Container(
       padding: EdgeInsets.all(8),
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: BoxBorder.fromLTRB(
-          bottom: BorderSide(width: 1.5, color: primaryColor.withValues(alpha: 0.35)),
-          right: BorderSide(width: 1.5, color: primaryColor.withValues(alpha: 0.35))
+          bottom: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
+          right: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
         ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'SIGNAL_ISOLATION // SECURE',
-            style: secondaryTextStyle
-          ),
-          Text(
-            noAnomaly[frame],
-            style: tertiaryTextStyle,
-          ),
+          Text('SIGNAL_ANALYZER // ACTIVE', style: secondaryTextStyle),
+          switch (panelState) {
+            PanelState.idle => AnomalyIdlePanelWidget(),
+            PanelState.detecting => AnomalyDetectingPanelWidget(
+              displayDuration: detectionDuration,
+            ),
+            PanelState.tracked => AnomalyTrackedPanelWidget(
+              anomaly: currentAnomaly!,
+            ),
+          },
         ],
       ),
     );

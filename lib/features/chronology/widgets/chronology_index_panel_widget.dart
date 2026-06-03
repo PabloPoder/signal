@@ -9,24 +9,28 @@ import 'package:signal/features/entry/providers/entry_provider.dart';
 class ChronologyIndexPanelWideg extends ConsumerWidget {
   const ChronologyIndexPanelWideg({super.key});
 
-   @override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entries = ref.watch(entryProvider);
 
     final int totalRecords = entries.length;
-    final int corruptedCount = entries.where((e) => e.corruptionLevel > 0).length;
-    
-    final double targetIntegrityRatio = totalRecords == 0 ? 1.0 : ((totalRecords - corruptedCount) / totalRecords);
+    final int corruptedCount = entries
+        .where((e) => e.corruptionLevel > 0)
+        .length;
+
+    final double targetIntegrityRatio = totalRecords == 0
+        ? 1.0
+        : ((totalRecords - corruptedCount) / totalRecords);
     final String archiveSpan;
     final String lastIndexSync;
 
-    if(entries.isEmpty) {
+    if (entries.isEmpty) {
       archiveSpan = '---- -- ----';
       lastIndexSync = '-- -- ----';
     } else {
       final int yearFirstEntry = entries.first.createdAt.year;
       final int yearLastEntry = entries.last.createdAt.year;
-      archiveSpan = '$yearFirstEntry -- $yearLastEntry';
+      archiveSpan = '$yearFirstEntry - $yearLastEntry';
       lastIndexSync = formatTime(entries.last.createdAt);
     }
 
@@ -36,53 +40,56 @@ class ChronologyIndexPanelWideg extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: BoxBorder.fromLTRB(
-          bottom: BorderSide(width: 1.5, color: primaryColor.withValues(alpha: 0.35)),
-          right: BorderSide(width: 1.5, color: primaryColor.withValues(alpha: 0.35))
+          bottom: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
+          right: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
         ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('CHRONOLOGY // METRICS', 
+          Text(
+            'CHRONOLOGY // METRICS',
             style: TextStyle(
               color: primaryColor.withValues(alpha: 0.8),
               shadows: [
                 Shadow(
                   color: primaryColor.withValues(alpha: 0.8),
-                  blurRadius: 2, 
-                  offset: Offset.zero
+                  blurRadius: 2,
+                  offset: Offset.zero,
                 ),
               ],
             ),
           ),
           Text(
-            'TOTAL_RECORDS: ${totalRecords.toString().padLeft(3, '0')}_NODES', 
+            'TOTAL_RECORDS: ${totalRecords.toString().padLeft(3, '0')}_NODES',
             style: tertiaryTextStyle,
           ),
           Text(
-            'CORRUPTED_LN: ${corruptedCount.toString().padLeft(3, '0')}_SECTORS', 
+            'CORRUPTED_LN: ${corruptedCount.toString().padLeft(3, '0')}_SECTORS',
             style: tertiaryTextStyle,
           ),
-          Text(
-            'DEGRADATION_RATE: 01.4%', 
-            style: tertiaryTextStyle,
-          ),
-          Text(
-            'ARCHIVE_SPAN: $archiveSpan', 
-            style: tertiaryTextStyle,
-          ),
-          Text(
-            'LAST_IDX_SYNC: $lastIndexSync',
-            style: tertiaryTextStyle,
-          ),
-          Text(
-            'INDEX_INTEGRITY: ${targetIntegrityRatio == 1.0 ? 'SECURE' : 'DEGRADED'} ', 
-            style: secondaryTextStyle,
-          ),
-          AsciiBarWidget(
-            ratio: targetIntegrityRatio, 
-            builder: buildPercentageBar,
+          Text('DEGRADATION_RATE: 01.4%', style: tertiaryTextStyle),
+          Text('ARCHIVE_SPAN: $archiveSpan', style: tertiaryTextStyle),
+          Text('LAST_SYNC: $lastIndexSync', style: tertiaryTextStyle),
+          buildDataBox(
+            title: 'INTEGRITY_CHECK',
+            widgets: [
+              Text(
+                'INDEX_STATUS: ${targetIntegrityRatio == 1.0 ? 'SECURE' : 'DEGRADED'} ',
+                style: tertiaryTextStyle,
+              ),
+              AsciiBarWidget(
+                ratio: targetIntegrityRatio,
+                builder: buildPercentageBar,
+              ),
+            ],
           ),
         ],
       ),

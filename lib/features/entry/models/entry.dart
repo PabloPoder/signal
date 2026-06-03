@@ -46,7 +46,7 @@ class Entry {
     required this.createdAt,
     required this.annotations,
     required this.corruptionLevel,
-    required this.corruption,
+    this.corruption = const CorruptionProfile(),
     required this.recoverability,
     this.overwriteCount = 0,
     // this.anomalyFlags = const [],

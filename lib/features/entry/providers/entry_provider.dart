@@ -1,9 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:signal/features/anomalies/models/anomaly_rules/ianomaly_rule.dart';
+import 'package:signal/features/anomalies/providers/anomaly_provider.dart';
+import 'package:signal/features/anomalies/services/anomaly_engine.dart';
 import 'package:signal/features/entry/models/entry.dart';
-import 'package:signal/features/entry/models/corruption_profile.dart'; 
+import 'package:signal/features/entry/models/corruption_profile.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
 import 'package:signal/features/entry/models/repositories/entry_repository.dart';
 import 'package:signal/features/entry/models/repositories/in_memory_entry_repository.dart';
+import 'package:signal/features/entry/providers/anomaly_engine_provider.dart';
 
 final entryRepositoryProvider = Provider<EntryRepository>((ref) {
   return InMemoryEntryRepository();
@@ -15,10 +19,13 @@ final entryProvider = NotifierProvider<EntryNotifier, List<Entry>>(
 
 class EntryNotifier extends Notifier<List<Entry>> {
   late final EntryRepository _repository;
+  late final AnomalyEngine anomalyEngine;
 
   @override
   List<Entry> build() {
     _repository = ref.read(entryRepositoryProvider);
+    anomalyEngine = ref.read(anomalyEngineProvider);
+
     return _repository.getAll();
   }
 
@@ -42,13 +49,6 @@ class EntryNotifier extends Notifier<List<Entry>> {
       annotations: annotations,
       createdAt: DateTime.now(),
       corruptionLevel: corruptionLevel,
-      corruption: CorruptionProfile(
-        signalNoise: signalNoise,
-        memoryDecay: memoryDecay,
-        semanticDrift: semanticDrift,
-        echoIntensity: echoIntensity,
-        structuralCollapse: structuralCollapse,
-      ),
       recoverability: recoverability,
       overwriteCount: 0,
     );
@@ -56,6 +56,18 @@ class EntryNotifier extends Notifier<List<Entry>> {
     _repository.add(entry);
 
     state = [..._repository.getAll()];
+
+    /// Evaluate anomalies after adding the new entry to ensure the latest state is considered.
+    final anomalyContext = AnomalyContext(
+      entries: state,
+      anomalies: ref.read(anomalyProvider),
+    );
+
+    final anomaly = anomalyEngine.evaluate(context: anomalyContext);
+
+    if (anomaly != null) {
+      ref.read(anomalyProvider.notifier).register(anomaly);
+    }
 
     return entry;
   }
@@ -76,19 +88,12 @@ class EntryNotifier extends Notifier<List<Entry>> {
     state = [...entries];
   }
 
-  void applyCorruption(
-    String entryId,
-    CorruptionProfile corruption,
-  ) {
+  void applyCorruption(String entryId, CorruptionProfile corruption) {
     final entry = findEntry(entryId);
 
     if (entry == null) return;
 
-    updateEntry(
-      entry.copyWith(
-        corruption: corruption,
-      ),
-    );
+    updateEntry(entry.copyWith(corruption: corruption));
   }
 
   Entry? findEntry(String id) {
@@ -104,17 +109,10 @@ class EntryNotifier extends Notifier<List<Entry>> {
 
     if (entry == null) return;
 
-    updateEntry(
-      entry.copyWith(
-        overwriteCount: entry.overwriteCount + 1,
-      ),
-    );
+    updateEntry(entry.copyWith(overwriteCount: entry.overwriteCount + 1));
   }
 
-  Entry? addAnnotation(
-    String entryId,
-    String note,
-  ) {
+  Entry? addAnnotation(String entryId, String note) {
     final entry = findEntry(entryId);
 
     if (entry == null) return null;
@@ -126,10 +124,7 @@ class EntryNotifier extends Notifier<List<Entry>> {
     );
 
     final updatedEntry = entry.copyWith(
-      annotations: [
-        ...entry.annotations,
-        annotation,
-      ]
+      annotations: [...entry.annotations, annotation],
     );
 
     updateEntry(updatedEntry);

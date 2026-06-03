@@ -7,8 +7,8 @@ import 'package:signal/features/entry/providers/entry_provider.dart';
 import 'package:signal/features/entry/utils/entry_response_builder.dart';
 
 TerminalResponse? handleChronologyCommands(
-  WidgetRef ref, 
-  ParsedCommand command
+  WidgetRef ref,
+  ParsedCommand command,
 ) {
   final chronologyCommand = findChronologyCommand(command.command);
 
@@ -26,14 +26,8 @@ TerminalResponse? handleChronologyCommands(
   }
 }
 
-TerminalResponse buildInspectResponse(
-  WidgetRef ref, 
-  ParsedCommand command, 
-) {
-  
-  final id = int.tryParse(
-    command.args.firstOrNull ?? '',
-  );
+TerminalResponse buildInspectResponse(WidgetRef ref, ParsedCommand command) {
+  final id = int.tryParse(command.args.firstOrNull ?? '');
 
   final errorResponse = TerminalResponse(
     success: false,
@@ -59,4 +53,3 @@ TerminalResponse buildInspectResponse(
 
   return buildEntryDetailResponse(entry);
 }
-

@@ -58,7 +58,12 @@ flutter:
         - asset: assets/fonts/IBMPlexMono-Regular.ttf
           style: normal
 
-    # - family: Levi AdobeDia
-    #   fonts:
-    #     - asset: assets/fonts/LeviAdobeDia.ttf
-    #       style: normal
+    - family: BIGBlueTerm
+      fonts:
+        - asset: assets/fonts/BigBlueTerm437NerdFontMono-Regular.ttf
+          style: normal
+
+    - family: Fixedsys62
+      fonts:
+        - asset: assets/fonts/Fixedsys62.ttf
+          style: normal

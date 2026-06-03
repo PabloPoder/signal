@@ -20,7 +20,6 @@ class _HeaderLogoWidgetState extends State<HeaderLogoWidget> {
 Personal Archive System""";
 
   late DateTime _currentTime;
-  
 
   @override
   void initState() {
@@ -43,7 +42,10 @@ Personal Archive System""";
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.transparent,
-        border: Border.all(color: primaryColor.withValues(alpha: 0.35), width: 1.5),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: 0.35),
+          width: 1.5,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -54,9 +56,9 @@ Personal Archive System""";
               asciiLogo,
               textWidthBasis: TextWidthBasis.longestLine,
               style: TextStyle(
-                fontFamily: 'IBM Plex Mono', 
+                fontFamily: 'IBM Plex Mono',
                 fontWeight: FontWeight.bold,
-                color:primaryColor.withValues(alpha: 1),
+                color: primaryColor.withValues(alpha: 1),
                 fontSize: 16,
                 height: 1.3,
                 letterSpacing: 0,
@@ -65,16 +67,14 @@ Personal Archive System""";
                   Shadow(
                     color: primaryColor,
                     offset: Offset.zero,
-                    blurRadius: 4
-                  )
-                ]
+                    blurRadius: 4,
+                  ),
+                ],
               ),
             ),
             Text(
               '[ ${formatTimeWithHour(_currentTime)} ]',
-              style: const TextStyle(
-                color: primaryColor,
-              ),
+              style: const TextStyle(color: primaryColor),
             ),
           ],
         ),

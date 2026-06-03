@@ -11,13 +11,10 @@ class RadarPanelWidget extends StatefulWidget {
   const RadarPanelWidget({super.key});
 
   @override
-  State<RadarPanelWidget> createState() =>
-      _RadarPanelWidgetState();
+  State<RadarPanelWidget> createState() => _RadarPanelWidgetState();
 }
 
-class _RadarPanelWidgetState
-    extends State<RadarPanelWidget> {
-
+class _RadarPanelWidgetState extends State<RadarPanelWidget> {
   static const int rows = 11;
   static const int cols = 23;
 
@@ -34,15 +31,12 @@ class _RadarPanelWidgetState
   void initState() {
     super.initState();
 
-    timer = Timer.periodic(
-      const Duration(milliseconds: 70),
-      (_) {
-        setState(() {
-          sweepAngle = (sweepAngle + 0.08) % (pi * 2);
-          _updateRadar();
-        });
-      },
-    );
+    timer = Timer.periodic(const Duration(milliseconds: 70), (_) {
+      setState(() {
+        sweepAngle = (sweepAngle + 0.08) % (pi * 2);
+        _updateRadar();
+      });
+    });
   }
 
   @override
@@ -52,7 +46,6 @@ class _RadarPanelWidgetState
   }
 
   void _updateRadar() {
-
     if (random.nextDouble() < 0.005) {
       pings.add(
         RadarPing(
@@ -87,23 +80,20 @@ class _RadarPanelWidgetState
   }
 
   String get radarAscii {
-
     final buffer = List.generate(rows, (y) {
       return List.generate(cols, (x) {
-
         // center
         if (x == centerX && y == centerY) {
           return '○';
         }
 
         // broken leds
-        if ((x == 19 && y == 0) || x == 6 && y == 8)  {
+        if ((x == 19 && y == 0) || x == 6 && y == 8) {
           return ' ';
         }
-        if ((x == 20 && y == 8) || x == 2 && y == 6)  {
+        if ((x == 20 && y == 8) || x == 2 && y == 6) {
           return '|';
         }
-        
 
         RadarPing? ping;
 
@@ -125,7 +115,7 @@ class _RadarPanelWidgetState
           if (ping.life > 15) return '@';
           if (ping.life > 8) return '#';
           return '+';
-        }   
+        }
 
         if (inSweep) return ' ';
 
@@ -143,15 +133,16 @@ class _RadarPanelWidgetState
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         border: BoxBorder.fromLTRB(
-          right: BorderSide(width:1.5, color: primaryColor.withValues(alpha: 0.35))
-        )
+          right: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'RADAR_MATRIX // ACTIVE', style: secondaryTextStyle,
-          ),
+          Text('RADAR_MATRIX // ACTIVE', style: secondaryTextStyle),
           Expanded(
             child: FittedBox(
               fit: BoxFit.fill,
@@ -159,10 +150,10 @@ class _RadarPanelWidgetState
                 radarAscii,
                 textWidthBasis: TextWidthBasis.longestLine,
                 style: tertiaryTextStyle.copyWith(
-                  fontFamily: 'IBM Plex Mono',
+                  fontFamily: 'Fixedsys62',
                   fontWeight: FontWeight.bold,
                   height: 1.0,
-                ) 
+                ),
               ),
             ),
           ),

@@ -19,16 +19,11 @@ class AsciiBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
-      tween: Tween<double>(
-        begin: 0.0,
-        end: ratio,
-      ),
+      tween: Tween<double>(begin: 0.0, end: ratio),
       duration: const Duration(milliseconds: 2000),
       curve: Curves.easeOutCubic,
       builder: (context, animatedRatio, child) {
-
-        final currentPercentage =
-            (animatedRatio * 100).toInt();
+        final currentPercentage = (animatedRatio * 100).toInt();
 
         String visual = builder(animatedRatio);
 
@@ -37,14 +32,10 @@ class AsciiBarWidget extends StatelessWidget {
         }
 
         if (showPercentage) {
-          visual +=
-              ' ${currentPercentage.toString().padLeft(3, '0')}%';
+          visual += '${currentPercentage.toString().padLeft(3, '0')}%';
         }
 
-        return Text(
-          visual,
-          style: secondaryTextStyle,
-        );
+        return Text(' $visual', style: secondaryTextStyle);
       },
     );
   }
