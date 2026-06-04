@@ -41,7 +41,9 @@ class MenuPanelWidget extends StatelessWidget {
             return Text(
               selected ? '> ${option.label}' : '  ${option.label}',
 
-              style: selected ? secondaryTextStyle : tertiaryTextStyle,
+              style: selected
+                  ? secondaryTextStyle.copyWith(height: 1)
+                  : tertiaryTextStyle,
             );
           }),
           Text(''),

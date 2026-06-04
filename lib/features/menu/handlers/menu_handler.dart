@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:signal/core/constants/about_ascii.dart';
 import 'package:signal/core/constants/colors.dart';
@@ -202,7 +201,6 @@ String _formatChronologyEntry(int index, Entry entry) {
   final finalLine = '> [$idStr] · $nodeDate · $titleStr';
 
   if (finalLine.length > maxTerminalWidth) {
-    // TODO: pad left $nodeDate
     return '${'> [$idStr] · $nodeDate · $titleStr'.substring(0, maxTerminalWidth - 3)}...';
   }
 

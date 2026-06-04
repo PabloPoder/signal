@@ -1,7 +1,6 @@
 import 'package:signal/core/constants/colors.dart';
 import 'package:signal/core/terminal/responses/terminal_response.dart';
 import 'package:signal/core/utils/date_parser.dart';
-import 'package:signal/features/chronology/data/chronology_logs.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
 import 'package:signal/features/entry/models/entry.dart';
 import 'package:signal/features/entry/utils/corruption/entry_corruption_renderer.dart';
@@ -11,8 +10,6 @@ TerminalResponse buildEntryDetailResponse(
   Entry entry, {
   List<String> mountLogs = const [],
 }) {
-  final rawTelemetry = entry.corruptionLevel < 50 ? 'DECRYPTED' : 'CRYPTED';
-
   final wordCount = entry.rawContent.trim().split(RegExp(r'\s+')).length;
 
   final charCount = entry.rawContent.length;

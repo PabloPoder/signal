@@ -28,16 +28,15 @@ class MainPanelWidget extends ConsumerStatefulWidget {
 }
 
 class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
-  
-  final terminalInputController = TextEditingController(); // Temrinal input controller
+  final terminalInputController =
+      TextEditingController(); // Temrinal input controller
 
   MenuSection selectedSection = MenuSection.idle; // Menu
   Entry? selectedEntry;
 
   bool isSyncing = false; // Animation flag | terminal messages
 
-  String terminalOutput  = ''; // To show terminal animations
-
+  String terminalOutput = ''; // To show terminal animations
 
   @override
   void initState() {
@@ -53,23 +52,21 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
   }
 
   String? _extractLastCommand(String text) {
-    if (text.isEmpty || !text.endsWith('\n'))  {
+    if (text.isEmpty || !text.endsWith('\n')) {
       return null;
     }
-    
+
     final lines = text.split('\n');
 
     if (lines.length < 2) return null;
 
-    final lastCommand = lines[lines.length - 2]
-        .trim()
-        .toLowerCase();
+    final lastCommand = lines[lines.length - 2].trim().toLowerCase();
 
     if (lastCommand.isEmpty) return null;
 
     return lastCommand;
   }
-  
+
   TerminalResponse? _dispatchCommand(ParsedCommand command) {
     final menuResponse = handleMenuCommands(ref, command, selectedSection);
 
@@ -80,32 +77,24 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
     switch (selectedSection) {
       case MenuSection.logEntry:
         return handleEntryCommands(ref, command, terminalInputController.text);
-      
+
       case MenuSection.chronology:
         return handleChronologyCommands(ref, command);
 
       case MenuSection.entryDetail:
-        return handleEntryDetailCommands(
-          ref,
-          command,
-          selectedEntry,
-        );
+        return handleEntryDetailCommands(ref, command, selectedEntry);
 
       default:
         return TerminalResponse(
-          success: false, 
-          logs: [
-            '[FAIL] UNKNOW_COMMAND_CONTEXT'
-          ],
+          success: false,
+          logs: ['[FAIL] UNKNOW_COMMAND_CONTEXT'],
         );
     }
   }
-  
+
   void _handleInput() {
     /// 1. ENTER DETECTION
-    final rawCommand = _extractLastCommand(
-      terminalInputController.text
-    );
+    final rawCommand = _extractLastCommand(terminalInputController.text);
 
     /// 2. PARSE COMMAND
     if (rawCommand == null || isSyncing) return;
@@ -113,7 +102,7 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
 
     /// 3. DELEGATE ACCORDING TO SECTION
     final response = _dispatchCommand(parsedCommand);
-    
+
     /// 4. RECEIVE TERMINAL RESPONSE
     if (response != null) {
       _renderResponse(response);
@@ -135,22 +124,20 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
 
     /// 3. update section
     setState(() {
-      selectedSection =
-          response.nextSection ?? selectedSection;
+      selectedSection = response.nextSection ?? selectedSection;
 
-      selectedEntry =
-          response.selectedEntry ?? selectedEntry;
+      selectedEntry = response.selectedEntry ?? selectedEntry;
     });
 
     /// 4. load inital buffer
     if (response.terminalBuffer != null) {
-        terminalInputController.text = response.terminalBuffer!;
+      terminalInputController.text = response.terminalBuffer!;
     }
 
     /// 5. render logs
     await _playSyncAnimation(response.logs);
   }
-  
+
   void _appendSystemMessage(String text) {
     setState(() {
       if (terminalOutput.isEmpty) {
@@ -178,15 +165,12 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
     });
   }
 
-  (
-    int terminalOutputFlex, 
-    int terminalFrameFlex,
-  ) get _consoleFlexDistribution {
+  (int terminalOutputFlex, int terminalFrameFlex) get _consoleFlexDistribution {
     return switch (selectedSection) {
-      MenuSection.chronology => (5, 1),   // CHORNOLOGY MODE
-      MenuSection.entryDetail => (5, 1),  // INSPECT MODE
-      MenuSection.logEntry => (2, 5),     // Writing Mode
-      _ => (5, 1)                         // DEFAULT 
+      MenuSection.chronology => (5, 1), // CHORNOLOGY MODE
+      MenuSection.entryDetail => (5, 1), // INSPECT MODE
+      MenuSection.logEntry => (2, 5), // Writing Mode
+      _ => (5, 1), // DEFAULT
     };
   }
 
@@ -231,11 +215,15 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
                   Expanded(
                     child: switch (selectedSection) {
                       MenuSection.idle => IdlePanelWidget(),
-                      MenuSection.logEntry => EntryIndexPanelWidget(controller: terminalInputController),
+                      MenuSection.logEntry => EntryIndexPanelWidget(
+                        controller: terminalInputController,
+                      ),
                       MenuSection.chronology => ChronologyIndexPanelWideg(),
-                      MenuSection.entryDetail => EntryDeatilPanelWidget(entry: selectedEntry!),
+                      MenuSection.entryDetail => EntryDeatilPanelWidget(
+                        entry: selectedEntry!,
+                      ),
                       _ => IdlePanelWidget(),
-                    }
+                    },
                   ),
                   Expanded(child: AnomalyPanelWidget()),
                 ],
@@ -248,7 +236,7 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
                 children: [
                   Expanded(
                     flex: terminalOutputFlex,
-                    child: TerminalOutput(output: terminalOutput)
+                    child: TerminalOutput(output: terminalOutput),
                   ),
                   Expanded(
                     flex: terminalFrameFlex,

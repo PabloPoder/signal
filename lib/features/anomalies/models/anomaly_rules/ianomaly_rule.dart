@@ -26,7 +26,7 @@ class EveryNEntriesRule implements IAnomalyRule {
   @override
   Anomaly? evaluate({required AnomalyContext context}) {
     if (context.entries.isEmpty) return null;
-    if (context.entries.length % 10 != 0) {
+    if (context.entries.length % 3 != 0) {
       return null;
     }
 
@@ -155,7 +155,6 @@ class OperatorReturnRule implements IAnomalyRule {
   }
 }
 
-// TODO: 
-// RecoveryRule
+// TODO: RecoveryRule
 // Trigger:  updateEntry()
 // Condition: corruptionLevel decreases

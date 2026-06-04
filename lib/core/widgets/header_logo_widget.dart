@@ -73,7 +73,7 @@ Personal Archive System""";
               ),
             ),
             Text(
-              '[ ${formatTimeWithHour(_currentTime)} ]',
+              '[ ${formatTimeComplete(_currentTime)} ]',
               style: const TextStyle(color: primaryColor),
             ),
           ],
