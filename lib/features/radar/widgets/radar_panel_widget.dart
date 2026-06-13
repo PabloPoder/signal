@@ -236,11 +236,7 @@ LAST: $last''';
                   child: Text(
                     radarAscii,
                     textWidthBasis: TextWidthBasis.longestLine,
-                    style: tertiaryTextStyle.copyWith(
-                      fontFamily: 'Fixedsys62',
-                      fontWeight: FontWeight.bold,
-                      height: 1.0,
-                    ),
+                    style: tertiaryTextStyle,
                   ),
                 ),
                 Text(telemetry, style: tertiaryTextStyle),

@@ -1,10 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:signal/features/anomalies/models/anomaly.dart';
 import 'package:signal/features/anomalies/models/anomaly_rules/ianomaly_rule.dart';
+import 'package:signal/features/anomalies/models/anomaly_rules/ioutcome_rule.dart';
 import 'package:signal/features/anomalies/providers/anomaly_provider.dart';
 import 'package:signal/features/anomalies/services/anomaly_engine.dart';
-import 'package:signal/features/entry/models/entry.dart';
-import 'package:signal/features/entry/models/corruption_profile.dart';
+import 'package:signal/features/anomalies/services/outcome_executor.dart';
+import 'package:signal/features/anomalies/services/outcome_generator.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
+import 'package:signal/features/entry/models/corruption_profile.dart';
+import 'package:signal/features/entry/models/entry.dart';
 import 'package:signal/features/entry/models/repositories/entry_repository.dart';
 import 'package:signal/features/entry/models/repositories/in_memory_entry_repository.dart';
 import 'package:signal/features/entry/providers/anomaly_engine_provider.dart';
@@ -21,6 +25,8 @@ class EntryNotifier extends Notifier<List<Entry>> {
   late final EntryRepository _repository;
   late final AnomalyEngine anomalyEngine;
 
+  final SignalOutcomeExecutor outcomeExecutor = SignalOutcomeExecutor();
+
   @override
   List<Entry> build() {
     _repository = ref.read(entryRepositoryProvider);
@@ -29,63 +35,40 @@ class EntryNotifier extends Notifier<List<Entry>> {
     return _repository.getAll();
   }
 
-  /// Creates a new system [Entry] incorporating the full [CorruptionProfile].
-  Entry createEntry({
-    required String title,
-    required String content,
-    List<Annotation> annotations = const [],
-    int corruptionLevel = 0,
-    int signalNoise = 0,
-    int memoryDecay = 0,
-    int semanticDrift = 0,
-    int echoIntensity = 0,
-    int structuralCollapse = 0,
-    int recoverability = 100,
-  }) {
+  void _refreshState() {
+    state = [..._repository.getAll()];
+  }
+
+  List<Entry> getEntries() => state;
+
+  Entry createEntry({required String title, required String content}) {
     final entry = Entry(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
       rawContent: content,
-      annotations: annotations,
+      annotations: const [],
       createdAt: DateTime.now(),
-      corruptionLevel: corruptionLevel,
-      recoverability: recoverability,
+      recoverability: 100,
       overwriteCount: 0,
     );
 
     _repository.add(entry);
 
-    state = [..._repository.getAll()];
+    _refreshState();
 
-    /// Evaluate anomalies after adding the new entry to ensure the latest state is considered.
-    final anomalyContext = AnomalyContext(
-      entries: state,
-      anomalies: ref.read(anomalyProvider),
-    );
-
-    final anomaly = anomalyEngine.evaluate(context: anomalyContext);
-
-    if (anomaly != null) {
-      ref.read(anomalyProvider.notifier).register(anomaly);
-    }
+    _evaluateAnomalies();
 
     return entry;
   }
 
   void deleteEntry(String id) {
     _repository.remove(id);
-    state = [..._repository.getAll()];
+    _refreshState();
   }
 
-  void updateEntry(Entry updatedEntry) {
-    final entries = _repository.getAll();
-    final index = entries.indexWhere((e) => e.id == updatedEntry.id);
-
-    if (index == -1) return;
-
-    entries[index] = updatedEntry;
-
-    state = [...entries];
+  void updateEntry(Entry entry) {
+    _repository.update(entry);
+    _refreshState();
   }
 
   void applyCorruption(String entryId, CorruptionProfile corruption) {
@@ -93,15 +76,17 @@ class EntryNotifier extends Notifier<List<Entry>> {
 
     if (entry == null) return;
 
-    updateEntry(entry.copyWith(corruption: corruption));
+    final merged = entry.corruption.merge(corruption);
+
+    updateEntry(entry.copyWith(corruption: merged));
   }
 
   Entry? findEntry(String id) {
-    for (final entry in state) {
-      if (entry.id == id) return entry;
+    try {
+      return state.firstWhere((e) => e.id == id);
+    } catch (_) {
+      return null;
     }
-
-    return null;
   }
 
   void incrementOverwriteCount(String entryId) {
@@ -130,5 +115,65 @@ class EntryNotifier extends Notifier<List<Entry>> {
     updateEntry(updatedEntry);
 
     return updatedEntry;
+  }
+
+  ///-------------------
+  /// ANOMALIES
+  ///-------------------
+  void _evaluateAnomalies() {
+    final anomalyContext = AnomalyContext(
+      entries: state,
+      anomalies: ref.read(anomalyProvider),
+    );
+
+    final anomaly = anomalyEngine.evaluate(context: anomalyContext);
+
+    if (anomaly == null) {
+      return;
+    }
+
+    ref.read(anomalyProvider.notifier).register(anomaly);
+
+    print('');
+    print(anomaly);
+
+    _processAnomaly(anomaly);
+  }
+
+  void _processAnomaly(Anomaly anomaly) {
+    final effect = generateOutcomeEffect(anomaly: anomaly);
+
+    if (effect == null) {
+      return;
+    }
+
+    final execution = outcomeExecutor.execute(
+      effect: effect,
+      context: OutcomeContext(anomaly: anomaly, entries: state),
+    );
+
+    print(execution ?? 'no_effects');
+
+    _applyOutcomeExecution(execution);
+  }
+
+  void _applyOutcomeExecution(OutcomeExecution? execution) {
+    if (execution == null) {
+      return;
+    }
+
+    switch (execution) {
+      case CorruptEntriesExecution():
+        for (final corruption in execution.corruptions) {
+          applyCorruption(corruption.entryId, corruption.profile);
+        }
+
+      // futuros casos:
+      //
+      // case CreateEntryExecution():
+      // case AppendAnnotationExecution():
+      // case PushSystemMessageExecution():
+      // case RetrieveArtifactExecution():
+    }
   }
 }

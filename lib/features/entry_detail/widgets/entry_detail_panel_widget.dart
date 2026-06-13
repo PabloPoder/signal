@@ -11,13 +11,16 @@ class EntryDeatilPanelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dataFragmentation = (entry.corruptionLevel / 100).clamp(0.0, 1.0);
+    final dataFragmentation = (entry.corruption.totalLevel / 100).clamp(
+      0.0,
+      1.0,
+    );
 
     final integrityRatio = 1 - dataFragmentation;
 
-    final recoverabilityTag = entry.corruptionLevel > 75
+    final recoverabilityTag = entry.corruption.totalLevel > 75
         ? 'HIGH'
-        : entry.corruptionLevel > 40
+        : entry.corruption.totalLevel > 40
         ? 'MEDIUM'
         : 'LOW';
 

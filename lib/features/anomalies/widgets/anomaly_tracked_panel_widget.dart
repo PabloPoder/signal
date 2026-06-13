@@ -18,13 +18,13 @@ class AnomalyTrackedPanelWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('CODE: ${anomaly.code}', style: tertiaryTextStyle),
+        Text('CODE: ${anomaly.template.code}', style: tertiaryTextStyle),
         Text(
-          'SOURCE: ${anomaly.type.name.toUpperCase()}',
+          'SOURCE: ${anomaly.template.type.name.toUpperCase()}',
           style: tertiaryTextStyle,
         ),
         Text('DETECT_TIME: $lastOutcome', style: tertiaryTextStyle),
-        Text('STATUS: ${anomaly.status.name.toUpperCase()}'),
+        Text('STATUS: RESOLVED'),
         buildDataBox(
           title: 'SIGNAL_LOCK',
           widgets: [AsciiBarWidget(ratio: 1, builder: buildPercentageBar)],

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:signal/features/anomalies/models/anomaly.dart';
+import 'package:signal/features/anomalies/models/anomaly_template.dart';
 import 'package:signal/features/anomalies/services/anomaly_generator.dart';
 import 'package:signal/features/entry/models/entry.dart';
 
@@ -26,7 +27,8 @@ class EveryNEntriesRule implements IAnomalyRule {
   @override
   Anomaly? evaluate({required AnomalyContext context}) {
     if (context.entries.isEmpty) return null;
-    if (context.entries.length % 3 != 0) {
+    // TODO: change to 20
+    if (context.entries.length % 1 != 0) {
       return null;
     }
 

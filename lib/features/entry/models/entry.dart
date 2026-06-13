@@ -14,12 +14,9 @@ class Entry {
 
   final List<Annotation> annotations;
 
-  /// Global corruption severity
-  final int corruptionLevel;
-
   /// Corruption behavior profile
   final CorruptionProfile corruption;
-  
+
   /// How recoverable this entry is
   /// 0 = lost forever
   /// 100 = fully recoverable
@@ -28,14 +25,15 @@ class Entry {
   /// Number of times reconstructed/patched
   final int overwriteCount;
 
-  
+  // CorruptinoLevel is calculated based on corruptionProfile
+  // final int corruptionLevel;
   /// TODO: add this, fase 2
   // /// System-generated anomaly markers
   // final List<String> anomalyFlags;
 
   // /// Prevents modifications/deletion
   // final bool locked;
-  
+
   // /// Simulated integrity checksum
   // final String checksum;
 
@@ -45,15 +43,15 @@ class Entry {
     required this.rawContent,
     required this.createdAt,
     required this.annotations,
-    required this.corruptionLevel,
     this.corruption = const CorruptionProfile(),
     required this.recoverability,
     this.overwriteCount = 0,
+    // required this.corruptionLevel,
     // this.anomalyFlags = const [],
     // this.locked = false,
     // required this.checksum,
   });
-  
+
   Entry copyWith({
     String? title,
     List<Annotation>? annotations,
@@ -71,13 +69,10 @@ class Entry {
       rawContent: rawContent,
       createdAt: createdAt,
       annotations: annotations ?? this.annotations,
-      corruptionLevel:
-          corruptionLevel ?? this.corruptionLevel,
       corruption: corruption ?? this.corruption,
-      recoverability:
-          recoverability ?? this.recoverability,
-      overwriteCount:
-          overwriteCount ?? this.overwriteCount,
+      recoverability: recoverability ?? this.recoverability,
+      overwriteCount: overwriteCount ?? this.overwriteCount,
+      // corruptionLevel: corruptionLevel ?? this.corruptionLevel,
       // anomalyFlags:
       //     anomalyFlags ?? this.anomalyFlags,
       // locked:
@@ -86,21 +81,16 @@ class Entry {
       //     checksum ?? this.checksum,
     );
   }
-  bool get hasAnnotations =>
-    annotations.isNotEmpty;
 
-  int get annotationCount =>
-      annotations.length;
+  bool get hasAnnotations => annotations.isNotEmpty;
 
-  bool get isCorrupted =>
-    corruptionLevel > 0;
+  int get annotationCount => annotations.length;
 
-  bool get isCritical =>
-    corruptionLevel >= 75;
+  bool get isCorrupted => corruption.totalLevel > 0;
 
-  double get integrityRatio =>
-    1 - (corruptionLevel / 100);
+  bool get isCritical => corruption.totalLevel >= 75;
 
-  bool get isRecoverable =>
-    recoverability > 0;
+  double get integrityRatio => 1 - (corruption.totalLevel / 100);
+
+  bool get isRecoverable => recoverability > 0;
 }

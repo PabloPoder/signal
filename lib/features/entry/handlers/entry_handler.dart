@@ -8,7 +8,7 @@ import 'package:signal/features/entry/utils/template.dart';
 import 'package:signal/features/menu/models/menu_option.dart';
 
 TerminalResponse? handleEntryCommands(
-  WidgetRef  ref,
+  WidgetRef ref,
   ParsedCommand command,
   String terminalBuffer,
 ) {
@@ -22,7 +22,7 @@ TerminalResponse? handleEntryCommands(
       final logs = isSaved
           ? entryCommandSelected.successLogs
           : entryCommandSelected.errorLogs;
-          
+
       return TerminalResponse(
         success: isSaved,
         logs: logs,
@@ -48,11 +48,7 @@ bool _saveEntry(WidgetRef ref, String terminalBuffer) {
     return false;
   }
 
-  ref.read(entryProvider.notifier).createEntry(
-    title: title,
-    content: content,
-    corruptionLevel: 0,
-  );
+  ref.read(entryProvider.notifier).createEntry(title: title, content: content);
 
   return true;
 }

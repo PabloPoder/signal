@@ -15,7 +15,7 @@ class ChronologyIndexPanelWideg extends ConsumerWidget {
 
     final int totalRecords = entries.length;
     final int corruptedCount = entries
-        .where((e) => e.corruptionLevel > 0)
+        .where((e) => e.corruption.totalLevel > 0)
         .length;
 
     final double targetIntegrityRatio = totalRecords == 0
@@ -25,7 +25,7 @@ class ChronologyIndexPanelWideg extends ConsumerWidget {
     final String lastIndexSync;
 
     if (entries.isEmpty) {
-      archiveSpan = '---- -- ----';
+      archiveSpan = '-- -- ----';
       lastIndexSync = '-- -- ----';
     } else {
       final int yearFirstEntry = entries.first.createdAt.year;
