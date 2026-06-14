@@ -29,7 +29,7 @@ class AnomalyTrackedPanelWidget extends StatelessWidget {
           title: 'SIGNAL_LOCK',
           widgets: [AsciiBarWidget(ratio: 1, builder: buildPercentageBar)],
         ),
-        Text('[i] ANOMALY_ARCHIVED', style: secondaryTextStyle),
+        Text('[i] ANOMALY_ARCHIVED', style: warningTextStyle),
       ],
     );
   }

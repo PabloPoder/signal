@@ -1,5 +1,4 @@
 import 'package:signal/features/entry/models/entry.dart';
-import 'package:signal/features/entry/models/corruption_profile.dart';
 import 'package:signal/features/entry/models/repositories/entry_repository.dart';
 
 class InMemoryEntryRepository implements EntryRepository {

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-// const Color primaryColor = Color(0xFFE6F1FF);
+// const Color primaryColor = Color.fromARGB(246, 174, 176, 179);
 // const Color primaryColor = Color(0xFF00FF80);
 const Color primaryColor = Color.fromARGB(255, 40, 251, 164);
+// const Color primaryColor = Color(0xFFFFBF00);
 // const Color primaryColor = Color(0xFFFF0022);
 const Color apocaliptic = Color(0xFFFFBF00);
 const Color warning = Color.fromARGB(255, 255, 0, 0);
@@ -23,8 +24,11 @@ ThemeData appTheme = ThemeData(
   ),
 );
 
+/// Primary Color text with glow.
 TextStyle secondaryTextStyle = TextStyle(
   color: primaryColor.withValues(alpha: 0.8),
+  fontFamily: 'Fixedsys62',
+  fontSize: 18,
   shadows: [
     Shadow(
       color: primaryColor.withValues(alpha: 0.8),
@@ -34,18 +38,39 @@ TextStyle secondaryTextStyle = TextStyle(
   ],
 );
 
+/// Primary color text without glow.
 TextStyle tertiaryTextStyle = TextStyle(
   color: primaryColor.withValues(alpha: 0.65),
+  fontFamily: 'Fixedsys62',
+  fontSize: 18,
   height: 1,
 );
 
-TextStyle warningTextStyle = TextStyle(
+/// Red color text with offset glow.
+TextStyle headerDataTextStyle = TextStyle(
   color: warning.withValues(alpha: 1),
+  fontFamily: 'Fixedsys62',
+  fontSize: 18,
   shadows: [
     Shadow(
       color: warning.withValues(alpha: 1),
       blurRadius: 2,
       offset: Offset(0, 3),
+    ),
+  ],
+);
+
+/// Warning text (red) with glow
+TextStyle warningTextStyle = TextStyle(
+  color: warning.withValues(alpha: 1),
+  fontFamily: 'Fixedsys62',
+  fontSize: 18,
+  // height: 1,
+  shadows: [
+    Shadow(
+      color: warning.withValues(alpha: 1),
+      blurRadius: 2,
+      offset: Offset.zero,
     ),
   ],
 );

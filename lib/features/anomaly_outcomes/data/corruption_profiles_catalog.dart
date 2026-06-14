@@ -1,5 +1,5 @@
 import 'package:signal/features/anomalies/models/anomaly_template.dart';
-import 'package:signal/features/entry/models/corruption_profile.dart';
+import 'package:signal/features/anomaly_outcomes/models/corruption_profile.dart';
 
 const corruptionCatalog = <AnomalyMood, List<CorruptionProfile>>{
   AnomalyMood.ghost: [

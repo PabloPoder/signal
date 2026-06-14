@@ -77,7 +77,7 @@ class _AnomalyDetectingPanelWidgetState
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('[ANOMALY_DETECTED]'),
+        Text('[ANOMALY_DETECTED]', style: tertiaryTextStyle),
         Text(_buildDetectingContent(), style: tertiaryTextStyle),
         buildDataBox(
           title: 'DETECTION',

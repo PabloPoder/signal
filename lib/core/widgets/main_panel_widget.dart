@@ -98,6 +98,7 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
 
     /// 2. PARSE COMMAND
     if (rawCommand == null || isSyncing) return;
+
     final parsedCommand = parseCommand(rawCommand);
 
     /// 3. DELEGATE ACCORDING TO SECTION

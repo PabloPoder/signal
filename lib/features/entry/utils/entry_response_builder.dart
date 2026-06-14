@@ -3,7 +3,7 @@ import 'package:signal/core/terminal/responses/terminal_response.dart';
 import 'package:signal/core/utils/date_parser.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
 import 'package:signal/features/entry/models/entry.dart';
-import 'package:signal/features/entry/utils/corruption/entry_corruption_renderer.dart';
+import 'package:signal/features/anomaly_outcomes/utils/entry_corruption_renderer.dart';
 import 'package:signal/features/menu/models/menu_option.dart';
 
 TerminalResponse buildEntryDetailResponse(
@@ -50,8 +50,9 @@ List<String> _buildAnnotationsLogs(List<Annotation> annotations) {
     final annotation = annotations[i];
 
     logs.add(
-      '[P-${(i + 1).toString().padLeft(3, '0')} | '
-      '${formatTime(annotation.createdAt)}]',
+      annotation.source == AnnotationSource.anomaly
+          ? _buildCorruptedAnnotationHeader(i, annotation)
+          : _buildNormalAnnotationHeader(i, annotation),
     );
 
     logs.add(annotation.content);
@@ -59,4 +60,26 @@ List<String> _buildAnnotationsLogs(List<Annotation> annotations) {
   }
 
   return logs;
+}
+
+String _buildNormalAnnotationHeader(int index, Annotation annotation) {
+  return '[P-${(index + 1).toString().padLeft(3, '0')} | '
+      '${formatTime(annotation.createdAt)}]';
+}
+
+String _buildCorruptedAnnotationHeader(int index, Annotation annotation) {
+  final id = 'P-${(index + 1).toString().padLeft(3, '0')}';
+
+  final date = formatTime(annotation.createdAt);
+
+  final variants = [
+    '[$id | $date]',
+    '[${id.replaceFirst('0', '*')} | $date]',
+    '[$id | ${date.replaceFirst('.', '?')}]',
+    '[${id.substring(0, id.length - 1)}? | $date]',
+    '[$id | ACCESS_DENIED]',
+    '[$id | ???]',
+  ];
+
+  return variants[annotation.id.hashCode % variants.length];
 }

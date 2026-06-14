@@ -1,10 +1,9 @@
-import 'package:signal/features/entry/models/corruption_profile.dart';
+import 'package:signal/features/anomaly_outcomes/models/corruption_profile.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
 
 class Entry {
   final String id;
 
-  /// Original human-readable title
   final String title;
 
   /// Inmubtable original backup
@@ -24,18 +23,6 @@ class Entry {
 
   /// Number of times reconstructed/patched
   final int overwriteCount;
-
-  // CorruptinoLevel is calculated based on corruptionProfile
-  // final int corruptionLevel;
-  /// TODO: add this, fase 2
-  // /// System-generated anomaly markers
-  // final List<String> anomalyFlags;
-
-  // /// Prevents modifications/deletion
-  // final bool locked;
-
-  // /// Simulated integrity checksum
-  // final String checksum;
 
   const Entry({
     required this.id,

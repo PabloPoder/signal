@@ -11,8 +11,11 @@ class FooterWidget extends StatefulWidget {
 }
 
 class _FooterWidgetState extends State<FooterWidget> {
-
-  static const freqStates = ["FREQ: 128.31GHz", "FREQ: 128.39GHz", "FREQ: 128.34GHz"];
+  static const freqStates = [
+    "FREQ: 128.31GHz",
+    "FREQ: 128.39GHz",
+    "FREQ: 128.34GHz",
+  ];
   static const gainStates = ["GAIN: 24.9dB", "GAIN: 24.1dB", "GAIN: 24.5dB"];
   static const sysmemStates = ["SYS_MEM: 84%", "SYS_MEM: 82%", "SYS_MEM: 86%"];
 
@@ -25,9 +28,9 @@ class _FooterWidgetState extends State<FooterWidget> {
     super.initState();
 
     timer = Timer.periodic(
-      const Duration(milliseconds: 500), 
-      _updateFrameState
-      );
+      const Duration(milliseconds: 500),
+      _updateFrameState,
+    );
   }
 
   @override
@@ -42,14 +45,19 @@ class _FooterWidgetState extends State<FooterWidget> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: primaryColor.withValues(alpha: 0.35), width: 1.5),
-          left:  BorderSide(color: primaryColor.withValues(alpha: 0.35), width: 1.5),
+          bottom: BorderSide(
+            color: primaryColor.withValues(alpha: 0.35),
+            width: 1.5,
+          ),
+          left: BorderSide(
+            color: primaryColor.withValues(alpha: 0.35),
+            width: 1.5,
+          ),
         ),
       ),
       child: SizedBox(
@@ -70,9 +78,7 @@ class _FooterWidgetState extends State<FooterWidget> {
 class _FooterItem extends StatelessWidget {
   final String info;
 
-  const _FooterItem({
-    required this.info
-  });
+  const _FooterItem({required this.info});
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +87,13 @@ class _FooterItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border(
-            right: BorderSide(color: primaryColor.withValues(alpha: 0.35), width: 1.5),
+            right: BorderSide(
+              color: primaryColor.withValues(alpha: 0.35),
+              width: 1.5,
+            ),
           ),
         ),
-        child: Center(
-          child: Text(info),
-        ),
+        child: Center(child: Text(info)),
       ),
     );
   }

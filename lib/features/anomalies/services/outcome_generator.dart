@@ -31,9 +31,12 @@ OutcomeEffect? generateOutcomeEffect({required Anomaly anomaly}) {
 
   final winner = rolls.entries.reduce((a, b) => a.value > b.value ? a : b);
 
-  print('---- [CHANCE TO APPLY EFFECTS] ----');
-  print('chance: ${winner.value.toStringAsFixed(1)}');
-  print('effect: ${winner.key.toString()}');
+  // TODO: delete this comments
+  // print('---- [CHANCE TO APPLY EFFECTS] ----');
+  // print('chance: ${winner.value.toStringAsFixed(1)}');
+  // print('effect: ${winner.key.toString()}');
 
-  return winner.value <= 0 ? null : winner.key;
+  return winner.value <= 0 ? null : OutcomeEffect.appendAnnotation;
+
+  // return winner.value <= 0 ? null : winner.key;
 }

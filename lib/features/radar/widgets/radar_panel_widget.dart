@@ -18,7 +18,7 @@ class RadarPanelWidget extends ConsumerStatefulWidget {
 }
 
 class _RadarPanelWidgetState extends ConsumerState<RadarPanelWidget> {
-  static const int rows = 13;
+  static const int rows = 12;
   static const int cols = 23;
   final List<RadarPing> pings = [];
   final int centerX = cols ~/ 2;
@@ -179,7 +179,75 @@ class _RadarPanelWidgetState extends ConsumerState<RadarPanelWidget> {
     return buffer.map((r) => r.join(' ')).join('\n');
   }
 
-  String get telemetry {
+  /// Cambiado a InlineSpan para poder inyectar colores directo en la matriz
+  InlineSpan buildRadarMatrixSpan(TextStyle baseStyle, TextStyle alertStyle) {
+    final List<InlineSpan> rowsSpans = [];
+
+    for (int y = 0; y < rows; y++) {
+      final List<InlineSpan> lineSpans = [];
+      for (int x = 0; x < cols; x++) {
+        if (x > 0) lineSpans.add(TextSpan(text: ' ', style: baseStyle));
+
+        if (x == centerX && y == centerY) {
+          lineSpans.add(TextSpan(text: ' ', style: baseStyle));
+          continue;
+        }
+
+        if (activeEvent == RadarEvent.interference &&
+            random.nextDouble() < 0.18) {
+          const noiseChars = ['%', '#', '§', '?', 'i', '*', 'X'];
+          final char = noiseChars[random.nextInt(noiseChars.length)];
+          // La interferencia brilla sutilmente en rojo
+          lineSpans.add(TextSpan(text: char, style: alertStyle));
+          continue;
+        }
+
+        if (random.nextDouble() < 0.0001) {
+          lineSpans.add(TextSpan(text: ' ', style: baseStyle));
+          continue;
+        }
+
+        RadarPing? ping;
+        for (final p in pings) {
+          if (p.x == x && p.y == y) {
+            ping = p;
+            break;
+          }
+        }
+
+        final inSweep = _isInSweep(x, y);
+
+        if (ping != null) {
+          if (inSweep) {
+            ping.life += 3;
+            lineSpans.add(TextSpan(text: '*', style: baseStyle));
+            continue;
+          }
+
+          if (ping.life > 100) {
+            lineSpans.add(TextSpan(text: '@', style: alertStyle));
+          } else if (ping.life > 15) {
+            lineSpans.add(TextSpan(text: '@', style: baseStyle));
+          } else if (ping.life > 8) {
+            lineSpans.add(TextSpan(text: '#', style: baseStyle));
+          } else {
+            lineSpans.add(TextSpan(text: '+', style: baseStyle));
+          }
+          continue;
+        }
+
+        lineSpans.add(TextSpan(text: inSweep ? ' ' : '·', style: baseStyle));
+      }
+
+      rowsSpans.add(TextSpan(children: lineSpans));
+      if (y < rows - 1) rowsSpans.add(TextSpan(text: '\n', style: baseStyle));
+    }
+
+    return TextSpan(children: rowsSpans);
+  }
+
+  /// Paint the special lines
+  InlineSpan buildTelemetrySpan(TextStyle baseStyle, TextStyle alertStyle) {
     String stateString = 'NOMINAL';
     if (activeEvent == RadarEvent.interference) {
       stateString = 'ERR_INTERFERENCE';
@@ -191,10 +259,28 @@ class _RadarPanelWidgetState extends ConsumerState<RadarPanelWidget> {
         ? formatTimeHour(lastProcessedAnomaly!.detectedAt)
         : 'CLEAR';
 
-    return '''
-PINGS: ${pings.length.toString().padLeft(2, '0')}  ANGLE: ${(sweepAngle * 180 / pi).round()}°
-STATE: $stateString 
-LAST: $last''';
+    final bool isCritical = stateString != 'NOMINAL';
+
+    return TextSpan(
+      children: [
+        TextSpan(text: 'PINGS: ', style: baseStyle),
+        TextSpan(
+          text: pings.length.toString().padLeft(2, '0'),
+          style: baseStyle,
+        ),
+        TextSpan(text: '   ANGLE: ', style: baseStyle),
+        TextSpan(
+          text: '${(sweepAngle * 180 / pi).round()}°\n',
+          style: baseStyle,
+        ),
+
+        TextSpan(text: 'STATE: ', style: baseStyle),
+        TextSpan(text: stateString, style: isCritical ? alertStyle : baseStyle),
+
+        TextSpan(text: ' \nLAST: ', style: baseStyle),
+        TextSpan(text: last, style: baseStyle),
+      ],
+    );
   }
 
   @override
@@ -233,13 +319,17 @@ LAST: $last''';
               children: [
                 FittedBox(
                   fit: BoxFit.contain,
-                  child: Text(
-                    radarAscii,
+                  child: RichText(
+                    text: buildRadarMatrixSpan(
+                      tertiaryTextStyle,
+                      secondaryTextStyle,
+                    ),
                     textWidthBasis: TextWidthBasis.longestLine,
-                    style: tertiaryTextStyle,
                   ),
                 ),
-                Text(telemetry, style: tertiaryTextStyle),
+                RichText(
+                  text: buildTelemetrySpan(tertiaryTextStyle, warningTextStyle),
+                ),
               ],
             ),
           ),

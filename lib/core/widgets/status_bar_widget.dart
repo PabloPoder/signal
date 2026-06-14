@@ -20,9 +20,9 @@ class _StatusBarWidgetState extends State<StatusBarWidget> {
     super.initState();
 
     timer = Timer.periodic(
-      const Duration(milliseconds: 500), 
-      _updateDotCountState
-      );
+      const Duration(milliseconds: 500),
+      _updateDotCountState,
+    );
   }
 
   @override
@@ -35,7 +35,7 @@ class _StatusBarWidgetState extends State<StatusBarWidget> {
     setState(() {
       dotCount++;
 
-      if(dotCount > 3) {
+      if (dotCount > 3) {
         dotCount = 0;
       }
     });

@@ -9,9 +9,7 @@ class HeaderMetadataWidget extends StatefulWidget {
   static int randomPort = Random().nextInt(3000);
   static int randomSector = Random().nextInt(5);
 
-  static const sectors = [
-    'EAST', 'WEST', 'NORTH', 'SOUTH', 'UNKNOW'
-  ];
+  static const sectors = ['EAST', 'WEST', 'NORTH', 'SOUTH', 'UNKNOW'];
 
   @override
   State<HeaderMetadataWidget> createState() => _HeaderMetadataWidgetState();
@@ -21,7 +19,7 @@ class _HeaderMetadataWidgetState extends State<HeaderMetadataWidget> {
   String nodeText = "NODE: ARG-01";
   final List<String> glitchChars = ['%', '&', r'$', '#', '@', '?', 'X', '0'];
   final Random _random = Random();
-  
+
   Timer? _glitchTimer;
   Timer? _resetTimer;
 
@@ -34,7 +32,8 @@ class _HeaderMetadataWidgetState extends State<HeaderMetadataWidget> {
       if (!mounted) return;
 
       setState(() {
-        final String randomChar = glitchChars[_random.nextInt(glitchChars.length)];
+        final String randomChar =
+            glitchChars[_random.nextInt(glitchChars.length)];
         nodeText = "NODE: A${randomChar}G-01";
       });
 
@@ -54,7 +53,7 @@ class _HeaderMetadataWidgetState extends State<HeaderMetadataWidget> {
   @override
   void initState() {
     super.initState();
-    _scheduleNextGlitch(); 
+    _scheduleNextGlitch();
   }
 
   @override
@@ -71,21 +70,15 @@ class _HeaderMetadataWidgetState extends State<HeaderMetadataWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            nodeText, 
-            style: warningTextStyle,
-          ),
+          Text(nodeText, style: headerDataTextStyle),
           Text(
             "SECTOR: ${HeaderMetadataWidget.sectors[HeaderMetadataWidget.randomSector]}",
-            style: warningTextStyle,
+            style: headerDataTextStyle,
           ),
-          Text(
-            "STATUS: STABLE",
-            style: warningTextStyle,
-          ),
+          Text("STATUS: STABLE", style: headerDataTextStyle),
           Text(
             "PORT.....${HeaderMetadataWidget.randomPort}",
-            style: warningTextStyle,
+            style: headerDataTextStyle,
           ),
         ],
       ),
