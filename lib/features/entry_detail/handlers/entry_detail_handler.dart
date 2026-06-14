@@ -25,7 +25,12 @@ TerminalResponse? handleEntryDetailCommands(
 
   final detailCommand = findEntryDetailCommand(command.command);
 
-  if (detailCommand == null) return null;
+  if (detailCommand == null) {
+    return TerminalResponse(
+      success: false,
+      logs: ['[FAIL] UNKNOW_COMMAND_CONTEXT'],
+    );
+  }
 
   switch (detailCommand.type) {
     case EntryDetailCommandType.annotate:
@@ -53,7 +58,6 @@ TerminalResponse _buildAnnotateResponse(
   Entry selectedEntry,
   ParsedCommand command,
 ) {
-
   final annotation = parseAnnotationBuffer(command.args);
 
   if (annotation == null) {

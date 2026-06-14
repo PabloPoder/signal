@@ -38,6 +38,10 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
 
   String terminalOutput = ''; // To show terminal animations
 
+  /// Scroll controllers Focus Nodes
+  final terminalInputFocus = FocusNode();
+  final terminalOutputFocus = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +52,10 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
   void dispose() {
     terminalInputController.removeListener(_handleInput);
     terminalInputController.dispose();
+
+    terminalInputFocus.dispose();
+    terminalOutputFocus.dispose();
+
     super.dispose();
   }
 
@@ -98,7 +106,6 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
 
     /// 2. PARSE COMMAND
     if (rawCommand == null || isSyncing) return;
-
     final parsedCommand = parseCommand(rawCommand);
 
     /// 3. DELEGATE ACCORDING TO SECTION
@@ -237,11 +244,23 @@ class _MainPanelWidgetState extends ConsumerState<MainPanelWidget> {
                 children: [
                   Expanded(
                     flex: terminalOutputFlex,
-                    child: TerminalOutput(output: terminalOutput),
+                    child: TerminalOutput(
+                      output: terminalOutput,
+                      focusNode: terminalOutputFocus,
+                      onExitScrollMode: () {
+                        terminalInputFocus.requestFocus();
+                      },
+                    ),
                   ),
                   Expanded(
                     flex: terminalFrameFlex,
-                    child: TerminalFrame(controller: terminalInputController),
+                    child: TerminalFrame(
+                      controller: terminalInputController,
+                      focusNode: terminalInputFocus,
+                      onEnterScrollMode: () {
+                        terminalOutputFocus.requestFocus();
+                      },
+                    ),
                   ),
                 ],
               ),

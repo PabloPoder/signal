@@ -12,7 +12,12 @@ TerminalResponse? handleChronologyCommands(
 ) {
   final chronologyCommand = findChronologyCommand(command.command);
 
-  if (chronologyCommand == null) return null;
+  if (chronologyCommand == null) {
+    return TerminalResponse(
+      success: false,
+      logs: ['[FAIL] UNKNOW_COMMAND_CONTEXT'],
+    );
+  }
 
   switch (chronologyCommand.type) {
     case ChronologyCommandType.inspect:

@@ -1,67 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:signal/core/constants/colors.dart';
 
 class TerminalFrame extends StatefulWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
+  final VoidCallback? onEnterScrollMode;
 
-  const TerminalFrame({super.key, required this.controller});
+  const TerminalFrame({
+    super.key,
+    required this.controller,
+    required this.focusNode,
+    this.onEnterScrollMode,
+  });
 
   @override
   State<TerminalFrame> createState() => _TerminalFrameState();
 }
 
 class _TerminalFrameState extends State<TerminalFrame> {
+  static const _readModeText =
+      '[!] STATUS :: READ_MODE :: ↑↓ SEEK :: ENTER RESUME';
+
+  @override
+  void initState() {
+    super.initState();
+    widget.focusNode.addListener(_onFocusChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.focusNode.removeListener(_onFocusChanged);
+    super.dispose();
+  }
+
+  void _onFocusChanged() => setState(() {});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    final hasFocus = widget.focusNode.hasFocus;
+
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: BoxBorder.fromLTRB(
+        border: Border(
           top: BorderSide(
             width: 1.5,
             color: primaryColor.withValues(alpha: 0.35),
           ),
         ),
       ),
-      child: TextField(
-        controller: widget.controller,
+      child: Focus(
+        onKeyEvent: (node, event) {
+          if (event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.escape) {
+            widget.onEnterScrollMode?.call();
+            return KeyEventResult.handled;
+          }
 
-        maxLength: 500,
-        maxLines: null,
-        expands: true,
-        autofocus: true,
-        canRequestFocus: true,
+          return KeyEventResult.ignored;
+        },
+        child: TextField(
+          controller: widget.controller,
+          focusNode: widget.focusNode,
 
-        textAlign: TextAlign.start,
-        cursorColor: primaryColor,
-        cursorWidth: 10,
-        cursorHeight: 22,
+          readOnly: !hasFocus,
+          showCursor: hasFocus,
 
-        style: TextStyle(
-          color: primaryColor,
-          fontFamily: 'Fixedsys62',
-          fontSize: 18,
-          shadows: [
-            Shadow(blurRadius: 2, color: primaryColor, offset: Offset.zero),
-          ],
-        ),
-        decoration: InputDecoration(
-          prefixText: ">",
-          // prefix: Text(">"),
-          prefixStyle: TextStyle(
-            fontFamily: 'Fixedsys62',
-            color: primaryColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
+          maxLength: 500,
+          maxLines: null,
+          expands: true,
+
+          textAlign: TextAlign.start,
+          cursorColor: primaryColor,
+          cursorWidth: 10,
+          cursorHeight: 22,
+
+          style: secondaryTextStyle,
+
+          decoration: InputDecoration(
+            prefixText: hasFocus ? '>' : '',
+            hintText: hasFocus ? null : _readModeText,
+            hintStyle: secondaryTextStyle,
+
+            counterText: '',
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            contentPadding: const EdgeInsets.all(12),
           ),
-          counterText: '',
-
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-
-          contentPadding: EdgeInsets.all(12),
         ),
       ),
     );
