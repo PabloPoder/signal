@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:signal/features/anomalies/models/anomaly.dart';
 import 'package:signal/features/anomalies/models/anomaly_rules/ianomaly_rule.dart';
@@ -9,14 +11,13 @@ import 'package:signal/features/anomalies/services/outcome_generator.dart';
 import 'package:signal/features/entry/models/annotation/annotation.dart';
 import 'package:signal/features/anomaly_outcomes/models/corruption_profile.dart';
 import 'package:signal/features/entry/models/entry.dart';
-import 'package:signal/features/entry/models/repositories/entry_repository.dart';
 import 'package:signal/features/entry/models/repositories/in_memory_entry_repository.dart';
 import 'package:signal/features/entry/providers/anomaly_engine_provider.dart';
 import 'package:signal/features/entry/utils/annotation_parser.dart';
 import 'package:signal/features/entry_detail/services/recovery_entry.dart';
 
-final entryRepositoryProvider = Provider<EntryRepository>((ref) {
-  return InMemoryEntryRepository();
+final entryRepositoryProvider = Provider<InMemoryEntryRepository>((ref) {
+  throw UnimplementedError();
 });
 
 final entryProvider = NotifierProvider<EntryNotifier, List<Entry>>(
@@ -27,7 +28,7 @@ class EntryNotifier extends Notifier<List<Entry>> {
   /// ---------------------
   /// DEPENDENCIES
   /// ---------------------
-  late final EntryRepository _repository;
+  late final InMemoryEntryRepository _repository;
 
   /// Domain services
   late final AnomalyEngine anomalyEngine;
@@ -100,10 +101,8 @@ class EntryNotifier extends Notifier<List<Entry>> {
       corruption: recovery.corruption,
       overwriteCount: entry.overwriteCount + 1,
     );
-    updateEntry(updatedEntry);
 
-    print('result: ${recovery.outcome.name.toString()}');
-    print('recoverability: ${recovery.recoverability}');
+    updateEntry(updatedEntry);
 
     return (recovery, updatedEntry);
   }
@@ -160,15 +159,6 @@ class EntryNotifier extends Notifier<List<Entry>> {
     _refreshState();
 
     return entry;
-  }
-
-  //TODO: deprecated
-  void _incrementOverwriteCount(String entryId) {
-    final entry = findEntry(entryId);
-
-    if (entry == null) return;
-
-    updateEntry(entry.copyWith(overwriteCount: entry.overwriteCount + 1));
   }
 
   void _applyCorruption(String entryId, CorruptionProfile corruption) {

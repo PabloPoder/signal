@@ -71,4 +71,24 @@ signal_noise: $signalNoise
 structural_collapse: $structuralCollapse
 }''';
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'echoIntensity': echoIntensity,
+      'memoryDecay': memoryDecay,
+      'semanticDrift': semanticDrift,
+      'signalNoise': signalNoise,
+      'structuralCollapse': structuralCollapse,
+    };
+  }
+
+  factory CorruptionProfile.fromJson(Map<String, dynamic> json) {
+    return CorruptionProfile(
+      echoIntensity: json['echoIntensity'],
+      memoryDecay: json['memoryDecay'],
+      semanticDrift: json['semanticDrift'],
+      signalNoise: json['signalNoise'],
+      structuralCollapse: json['structuralCollapse'],
+    );
+  }
 }

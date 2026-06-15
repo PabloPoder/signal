@@ -85,6 +85,7 @@ TerminalResponse _buildAnnotateResponse(
   );
 }
 
+// TODO Remove delete feature?
 TerminalResponse _buildDeleteResponse(
   WidgetRef ref,
   Entry selectedEntry,

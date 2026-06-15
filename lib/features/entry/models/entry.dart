@@ -68,6 +68,34 @@ class Entry {
   double get integrityRatio => 1 - (corruption.totalLevel / 100);
 
   bool get isRecoverable => recoverability > 0;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'rawContent': rawContent,
+      'createdAt': createdAt.toIso8601String(),
+      'overwriteCount': overwriteCount,
+      'recoverability': recoverability,
+      'corruption': corruption.toJson(),
+      'annotations': annotations.map((a) => a.toJson()).toList(),
+    };
+  }
+
+  factory Entry.fromJson(Map<String, dynamic> json) {
+    return Entry(
+      id: json['id'],
+      title: json['title'],
+      rawContent: json['rawContent'],
+      createdAt: DateTime.parse(json['createdAt']),
+      overwriteCount: json['overwriteCount'],
+      recoverability: json['recoverability'],
+      corruption: CorruptionProfile.fromJson(json['corruption']),
+      annotations: (json['annotations'] as List)
+          .map((e) => Annotation.fromJson(e))
+          .toList(),
+    );
+  }
 }
 
 

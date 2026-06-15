@@ -12,4 +12,24 @@ class Annotation {
     required this.createdAt,
     required this.source,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'content': content,
+      'createdAt': createdAt.toIso8601String(),
+      'source': source.name.toString(),
+    };
+  }
+
+  factory Annotation.fromJson(Map<String, dynamic> json) {
+    return Annotation(
+      id: json['id'],
+      content: json['content'],
+      createdAt: DateTime.parse(json['createdAt']),
+      source: AnnotationSource.values.firstWhere(
+        (e) => e.name == json['source'],
+      ),
+    );
+  }
 }
