@@ -1,14 +1,14 @@
 import 'package:signal/core/terminal/models/terminal_command.dart';
 
 enum EntryDetailCommandType {
-  annotate,   // CreateAnnotation
-  delete,     // Delete
-  decode,     // Fix
+  annotate, // CreateAnnotation
+  delete, // Delete
+  decode, // Fix
   back,
 }
 
 /// Representation of how a EntryDetailCommand is composed.
-class EntryDetailCommand extends TerminalCommand{
+class EntryDetailCommand extends TerminalCommand {
   final EntryDetailCommandType type;
   final List<String> successLogs;
   final List<String> errorLogs;

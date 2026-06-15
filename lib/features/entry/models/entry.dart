@@ -31,12 +31,10 @@ class Entry {
     required this.createdAt,
     required this.annotations,
     this.corruption = const CorruptionProfile(),
+
     required this.recoverability,
+
     this.overwriteCount = 0,
-    // required this.corruptionLevel,
-    // this.anomalyFlags = const [],
-    // this.locked = false,
-    // required this.checksum,
   });
 
   Entry copyWith({
@@ -46,9 +44,6 @@ class Entry {
     CorruptionProfile? corruption,
     int? recoverability,
     int? overwriteCount,
-    // List<String>? anomalyFlags,
-    // bool? locked,
-    // String? checksum,
   }) {
     return Entry(
       id: id,
@@ -59,13 +54,6 @@ class Entry {
       corruption: corruption ?? this.corruption,
       recoverability: recoverability ?? this.recoverability,
       overwriteCount: overwriteCount ?? this.overwriteCount,
-      // corruptionLevel: corruptionLevel ?? this.corruptionLevel,
-      // anomalyFlags:
-      //     anomalyFlags ?? this.anomalyFlags,
-      // locked:
-      //     locked ?? this.locked,
-      // checksum:
-      //     checksum ?? this.checksum,
     );
   }
 
@@ -81,3 +69,13 @@ class Entry {
 
   bool get isRecoverable => recoverability > 0;
 }
+
+
+
+// 1. verificar recoverability > 0
+// 2. verificar corruption > 0
+// 3. calcular éxito según recoverability
+// 4. restaurar algunos fragmentos
+// 5. disminuir recoverability
+// 6. incrementar recoveryAttempts
+// 7. mostrar logs

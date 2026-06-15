@@ -3,6 +3,7 @@ import 'package:signal/core/constants/colors.dart';
 import 'package:signal/core/utils/ascii_visuals.dart';
 import 'package:signal/core/widgets/ascii_bar_widget.dart';
 import 'package:signal/features/entry/models/entry.dart';
+import 'package:signal/features/entry_detail/services/recovery_entry.dart';
 
 class EntryDeatilPanelWidget extends StatelessWidget {
   final Entry entry;
@@ -18,7 +19,8 @@ class EntryDeatilPanelWidget extends StatelessWidget {
 
     final integrityRatio = 1 - dataFragmentation;
 
-    final recoverabilityTag = entry.corruption.totalLevel > 75
+    final recoverabilityTag =
+        RecoveryService.calculateRecoverability(entry) > 75
         ? 'HIGH'
         : entry.corruption.totalLevel > 40
         ? 'MEDIUM'

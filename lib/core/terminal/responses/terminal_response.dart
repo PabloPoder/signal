@@ -1,12 +1,12 @@
 import 'package:signal/features/entry/models/entry.dart';
 import 'package:signal/features/menu/models/menu_option.dart';
 
-/// Represents a terminal response. 
+/// Represents a terminal response.
 class TerminalResponse {
   final bool success;
   final List<String> logs;
   final MenuSection? nextSection;
-  
+
   final bool clearTerminal;
   final bool clearOutput;
 

@@ -13,6 +13,7 @@ import 'package:signal/features/entry/models/repositories/entry_repository.dart'
 import 'package:signal/features/entry/models/repositories/in_memory_entry_repository.dart';
 import 'package:signal/features/entry/providers/anomaly_engine_provider.dart';
 import 'package:signal/features/entry/utils/annotation_parser.dart';
+import 'package:signal/features/entry_detail/services/recovery_entry.dart';
 
 final entryRepositoryProvider = Provider<EntryRepository>((ref) {
   return InMemoryEntryRepository();
@@ -31,6 +32,7 @@ class EntryNotifier extends Notifier<List<Entry>> {
   /// Domain services
   late final AnomalyEngine anomalyEngine;
   final SignalOutcomeExecutor outcomeExecutor = SignalOutcomeExecutor();
+  final recoverService = RecoveryService();
 
   /// ---------------------
   /// Lifecycle
@@ -91,6 +93,21 @@ class EntryNotifier extends Notifier<List<Entry>> {
     _refreshState();
   }
 
+  (RecoveryResult, Entry) fixEntry(Entry entry) {
+    final recovery = recoverService.attemptRecovery(entry);
+
+    final updatedEntry = entry.copyWith(
+      corruption: recovery.corruption,
+      overwriteCount: entry.overwriteCount + 1,
+    );
+    updateEntry(updatedEntry);
+
+    print('result: ${recovery.outcome.name.toString()}');
+    print('recoverability: ${recovery.recoverability}');
+
+    return (recovery, updatedEntry);
+  }
+
   Entry? addAnnotation(
     String entryId,
     String note, {
@@ -145,6 +162,7 @@ class EntryNotifier extends Notifier<List<Entry>> {
     return entry;
   }
 
+  //TODO: deprecated
   void _incrementOverwriteCount(String entryId) {
     final entry = findEntry(entryId);
 
@@ -182,9 +200,6 @@ class EntryNotifier extends Notifier<List<Entry>> {
 
     ref.read(anomalyProvider.notifier).register(anomaly);
 
-    print('---- [ANOMALY_DETECTED] ----');
-    // print(anomaly);
-
     _processAnomaly(anomaly);
   }
 
@@ -200,8 +215,6 @@ class EntryNotifier extends Notifier<List<Entry>> {
       effect: effect,
       context: OutcomeContext(anomaly: anomaly, entries: state),
     );
-
-    print(execution ?? 'no_effects');
 
     _applyOutcomeExecution(execution);
   }

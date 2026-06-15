@@ -23,8 +23,8 @@ final entryDetailCommands = [
     description: "Purges node from the registry.",
     successLogs: [
       '[ OK ] MEMORY_NODE_PURGED',
-      '[VOID] ARCHIVE_REFERENCE_REMOVED', 
-      '[SYNC] INDEX_REF_RECONSTRUCTED', 
+      '[VOID] ARCHIVE_REFERENCE_REMOVED',
+      '[SYNC] INDEX_REF_RECONSTRUCTED',
     ],
     errorLogs: [
       '[FAIL] NODE_PURGE_ABORTED',
@@ -36,7 +36,7 @@ final entryDetailCommands = [
   EntryDetailCommand(
     type: EntryDetailCommandType.decode,
     aliases: ['/decode', '/fix', '/decrypt'],
-    description: "Decrypts stream based on recoverability.",
+    description: "Decrypts stream.",
     successLogs: [
       '[ OK ] SIGNAL_PATTERN_RESTORED',
       '[DCD*] CORRUPTION_LAYER_REMOVED',
@@ -57,8 +57,6 @@ final entryDetailCommands = [
       '[ OK ] DETAIL_STREAM_TERMINATED',
       '[SYNC] DIRECTORY_INDEX_RECALLED',
     ],
-    errorLogs: [
-      '[FAIL] INTERFACE_THREAD_LOCKED',
-    ],
+    errorLogs: ['[FAIL] INTERFACE_THREAD_LOCKED'],
   ),
 ];

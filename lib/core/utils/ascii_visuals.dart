@@ -28,7 +28,7 @@ String buildPercentageBar(double integrityRatio) {
 }
 
 String buildFragmentationPattern(double ratio) {
-  const totalBlocks = 9;
+  const totalBlocks = 8;
 
   final corruption = (ratio * totalBlocks).round();
 

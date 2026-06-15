@@ -6,6 +6,7 @@ import 'package:signal/features/entry/providers/entry_provider.dart';
 import 'package:signal/features/entry/utils/annotation_parser.dart';
 import 'package:signal/features/entry/utils/entry_response_builder.dart';
 import 'package:signal/features/entry_detail/models/entry_details_command.dart';
+import 'package:signal/features/entry_detail/services/recovery_entry.dart';
 import 'package:signal/features/entry_detail/utils/entry_detail_command_parser.dart';
 import 'package:signal/features/menu/handlers/menu_handler.dart';
 import 'package:signal/features/menu/models/menu_option.dart';
@@ -37,10 +38,10 @@ TerminalResponse? handleEntryDetailCommands(
       return _buildAnnotateResponse(ref, selectedEntry, command);
 
     case EntryDetailCommandType.delete:
-      return _buildDecodeResponse(ref, selectedEntry, command);
+      return _buildDeleteResponse(ref, selectedEntry, command);
 
     case EntryDetailCommandType.decode:
-      return _buildDeleteResponse(ref, selectedEntry, command);
+      return _buildDecodeResponse(ref, selectedEntry, command);
 
     case EntryDetailCommandType.back:
       return buildChronologyResponse(
@@ -102,10 +103,19 @@ TerminalResponse _buildDecodeResponse(
   Entry selectedEntry,
   ParsedCommand command,
 ) {
-  return TerminalResponse(
-    success: true,
-    logs: ['[PATCH] TODO'],
-    clearOutput: false,
-    clearTerminal: true,
+  final (recovery, updatedEntry) = ref
+      .read(entryProvider.notifier)
+      .fixEntry(selectedEntry);
+
+  if (recovery.outcome == RecoveryOutcome.success) {
+    return buildEntryDetailResponse(
+      updatedEntry,
+      mountLogs: ['[SUCC] RECOVERY_SUCCESS'],
+    );
+  }
+
+  return buildEntryDetailResponse(
+    updatedEntry,
+    mountLogs: ['[FAIL] RECOVERY_FAILD'],
   );
 }
