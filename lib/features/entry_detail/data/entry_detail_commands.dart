@@ -48,15 +48,4 @@ final entryDetailCommands = [
       '[CRIT] ANOMALY_CLUSTER_PERSISTING',
     ],
   ),
-
-  EntryDetailCommand(
-    type: EntryDetailCommandType.back,
-    aliases: ['/back', '/exit', '/return'],
-    description: "Returns to the master directory.",
-    successLogs: [
-      '[ OK ] DETAIL_STREAM_TERMINATED',
-      '[SYNC] DIRECTORY_INDEX_RECALLED',
-    ],
-    errorLogs: ['[FAIL] INTERFACE_THREAD_LOCKED'],
-  ),
 ];

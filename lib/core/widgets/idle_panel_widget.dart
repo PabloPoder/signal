@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:signal/core/constants/colors.dart';
 
-class IdlePanelWidget extends StatelessWidget{
-
-  const IdlePanelWidget({
-    super.key,
-  });
+class IdlePanelWidget extends StatelessWidget {
+  const IdlePanelWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,22 +12,29 @@ class IdlePanelWidget extends StatelessWidget{
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: BoxBorder.fromLTRB(
-          bottom: BorderSide(width: 1.5, color: primaryColor.withValues(alpha: 0.35)),
-          right: BorderSide(width: 1.5, color: primaryColor.withValues(alpha: 0.35))
+          bottom: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
+          right: BorderSide(
+            width: 1.5,
+            color: primaryColor.withValues(alpha: 0.35),
+          ),
         ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('SYS_CORE // STANDBY', 
+          Text(
+            'SYS_CORE // STANDBY',
             style: TextStyle(
               color: primaryColor.withValues(alpha: 0.8),
               shadows: [
                 Shadow(
                   color: primaryColor.withValues(alpha: 0.8),
-                  blurRadius: 2, 
-                  offset: Offset.zero
+                  blurRadius: 2,
+                  offset: Offset.zero,
                 ),
               ],
             ),
@@ -39,7 +43,10 @@ class IdlePanelWidget extends StatelessWidget{
           Text('ENCRYPTION_KEY: LOADED', style: tertiaryTextStyle),
           Text('RADAR_DUMP: CLEAR', style: tertiaryTextStyle),
           Text(''),
-          Text('[!] ENTER "/help"\nTO ACCESS PROTOCOLS.', style: secondaryTextStyle),
+          Text(
+            '[!] ENTER "/help"\nTO ACCESS PROTOCOLS.',
+            style: secondaryTextStyle,
+          ),
         ],
       ),
     );

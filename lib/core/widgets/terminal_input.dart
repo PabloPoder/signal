@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:signal/core/constants/app_limits.dart';
 import 'package:signal/core/constants/colors.dart';
 
-class TerminalFrame extends StatefulWidget {
+class TerminalInput extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final VoidCallback? onEnterScrollMode;
 
-  const TerminalFrame({
+  const TerminalInput({
     super.key,
     required this.controller,
     required this.focusNode,
@@ -15,10 +16,10 @@ class TerminalFrame extends StatefulWidget {
   });
 
   @override
-  State<TerminalFrame> createState() => _TerminalFrameState();
+  State<TerminalInput> createState() => _TerminalInputState();
 }
 
-class _TerminalFrameState extends State<TerminalFrame> {
+class _TerminalInputState extends State<TerminalInput> {
   static const _readModeText =
       '[!] STATUS :: READ_MODE :: ↑↓ SEEK :: ENTER RESUME';
 
@@ -66,7 +67,7 @@ class _TerminalFrameState extends State<TerminalFrame> {
           readOnly: !hasFocus,
           showCursor: hasFocus,
 
-          maxLength: 500,
+          maxLength: maxEntryChars,
           maxLines: null,
           expands: true,
 

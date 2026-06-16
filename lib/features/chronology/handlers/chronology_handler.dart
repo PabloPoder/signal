@@ -22,12 +22,15 @@ TerminalResponse? handleChronologyCommands(
   switch (chronologyCommand.type) {
     case ChronologyCommandType.inspect:
       return buildInspectResponse(ref, command);
-    case ChronologyCommandType.filter:
-      return TerminalResponse(success: true, logs: []);
-    case ChronologyCommandType.find:
-      return TerminalResponse(success: true, logs: []);
-    case ChronologyCommandType.select:
-      return TerminalResponse(success: true, logs: []);
+
+    // case ChronologyCommandType.back:
+    //   return TerminalResponse(
+    //     success: true,
+    //     nextSection: MenuSection.idle,
+    //     logs: [],
+    //     clearOutput: true,
+    //     clearTerminal: true,
+    //   );
   }
 }
 

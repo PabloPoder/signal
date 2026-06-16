@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:signal/core/constants/app_limits.dart';
 import 'package:signal/core/constants/colors.dart';
 import 'package:signal/core/utils/ascii_visuals.dart';
 import 'package:signal/core/widgets/ascii_bar_widget.dart';
@@ -8,7 +9,6 @@ import 'package:signal/core/widgets/ascii_bar_widget.dart';
 class EntryIndexPanelWidget extends StatelessWidget {
   final TextEditingController controller;
   final autoSaveNode = Random().nextInt(100);
-  final maxBufferCapacity = 500;
 
   EntryIndexPanelWidget({super.key, required this.controller});
 
@@ -53,7 +53,7 @@ class EntryIndexPanelWidget extends StatelessWidget {
                   ..._buildTextCounters(controller.text),
                   Text('┌──── BUFFER_USAGE  ────┐', style: tertiaryTextStyle),
                   AsciiBarWidget(
-                    ratio: (controller.text.length / maxBufferCapacity).clamp(
+                    ratio: (controller.text.length / maxEntryChars).clamp(
                       0.0,
                       1.0,
                     ),

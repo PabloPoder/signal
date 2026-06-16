@@ -4,7 +4,6 @@ enum EntryDetailCommandType {
   annotate, // CreateAnnotation
   delete, // Delete
   decode, // Fix
-  back,
 }
 
 /// Representation of how a EntryDetailCommand is composed.

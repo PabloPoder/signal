@@ -16,6 +16,7 @@ import 'package:signal/features/menu/data/menu_options.dart';
 import 'package:signal/features/menu/models/menu_option.dart';
 import 'package:signal/features/menu/utils/menu_command_parser.dart';
 
+/// Build the corresponding [TerminalResponse] to the executed command
 TerminalResponse? handleMenuCommands(
   WidgetRef ref,
   ParsedCommand command,
@@ -32,6 +33,27 @@ TerminalResponse? handleMenuCommands(
 
   if (command.command.trim().toLowerCase() == '/about') {
     return _buildAboutResponse(selectedSection);
+  }
+
+  if (command.command.trim().toLowerCase() == '/back') {
+    /// Chronology being father of EntryDetailSection
+    if (selectedSection == MenuSection.entryDetail) {
+      return buildChronologyResponse(
+        ref,
+        mountLogs: [
+          '[ OK ] DETAIL_STREAM_TERMINATED',
+          '[SYNC] DIRECTORY_INDEX_RECALLED',
+        ],
+      );
+    }
+
+    return TerminalResponse(
+      success: true,
+      logs: ['[IDLE] STANDBY_MOUNT'],
+      nextSection: MenuSection.idle,
+      clearOutput: true,
+      clearTerminal: true,
+    );
   }
 
   /// NAVIGATION
@@ -162,6 +184,7 @@ TerminalResponse buildChronologyResponse(
 List<String> _buildCommandsLogs(List<TerminalCommand> commands) {
   final List<String> logs = [];
 
+  /// NAVIGATION COMMMANDS
   for (final menuOption in menuOptions) {
     final aliases = menuOption.aliases.join(' • ');
 
@@ -169,8 +192,13 @@ List<String> _buildCommandsLogs(List<TerminalCommand> commands) {
     logs.add('  └─> Mounts localized system sector.');
   }
 
+  /// BACK NAVIGATION
+  logs.add('[NAV] /back');
+  logs.add('  └─> Mounts the prev. localized system sector.');
+
   logs.add('─' * maxTerminalWidth);
 
+  /// CONTEXT COMMANDS
   for (final cmd in commands) {
     final aliases = cmd.aliases.join(' • ');
 

@@ -42,15 +42,6 @@ TerminalResponse? handleEntryDetailCommands(
 
     case EntryDetailCommandType.decode:
       return _buildDecodeResponse(ref, selectedEntry, command);
-
-    case EntryDetailCommandType.back:
-      return buildChronologyResponse(
-        ref,
-        mountLogs: [
-          '[SYNC] ENTRY_NODE_EJECTED',
-          '[RETU] CHRONOLOGY_INDEX_RESTORED',
-        ],
-      );
   }
 }
 

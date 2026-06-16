@@ -25,7 +25,7 @@ TerminalResponse buildEntryDetailResponse(
       '[${entry.id}] DATA_BUFFER_STREAM',
       '─' * maxTerminalWidth,
       'TITLE: ${entry.title}',
-      'DATE: ${formatTime(entry.createdAt)}',
+      'DATE: ${formatTimeCompleteInverted(entry.createdAt)}',
       'WORD_COUNT: $wordCount CHAR_COUNT: $charCount',
       'NODE_ID: ARG-01_CHRONO_N${entry.id}',
       // 'RAW_TELEMETRY: [ $rawTelemetry ]',
